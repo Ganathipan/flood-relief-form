@@ -1267,18 +1267,28 @@
       if (selectedItem) {
         filtered = filtered.filter(need => {
           if (!need.needs && !need.needsFormatted) return false;
-          // Check both raw needs string and formatted string
-          const needsRaw = (need.needs || '').toLowerCase();
-          const needsFormatted = (need.needsFormatted || '').toLowerCase();
+          
           const searchItem = selectedItem.toLowerCase().replace(/\s+/g, '');
           
-          // Check if item exists in raw format (e.g., "FoodPacks_10")
+          // Check raw needs string (format: "FoodPacks_10;Medicines_5;")
+          const needsRaw = (need.needs || '').toLowerCase();
           if (needsRaw.includes(searchItem)) return true;
           
-          // Check if item exists in formatted string (e.g., "Food Packs (10)")
-          // Remove quantities and normalize for comparison
-          const normalizedFormatted = needsFormatted.replace(/\(\d+\)/g, '').replace(/\s+/g, '');
-          return normalizedFormatted.includes(searchItem);
+          // Check formatted string (format: "Food Packs (10), Medicines (5)")
+          const needsFormatted = (need.needsFormatted || '').toLowerCase();
+          // Split by comma to get individual items
+          const items = needsFormatted.split(',').map(item => item.trim());
+          
+          // Check each item individually
+          for (let item of items) {
+            // Remove quantity like "(10)" and normalize spaces
+            const normalizedItem = item.replace(/\(\d+\)/g, '').replace(/\s+/g, '').trim();
+            if (normalizedItem === searchItem || normalizedItem.includes(searchItem)) {
+              return true;
+            }
+          }
+          
+          return false;
         });
       }
       
@@ -1364,18 +1374,28 @@
       if (selectedItem) {
         filtered = filtered.filter(donor => {
           if (!donor.donations && !donor.donationsFormatted) return false;
-          // Check both raw donations string and formatted string
-          const donationsRaw = (donor.donations || '').toLowerCase();
-          const donationsFormatted = (donor.donationsFormatted || '').toLowerCase();
+          
           const searchItem = selectedItem.toLowerCase().replace(/\s+/g, '');
           
-          // Check if item exists in raw format (e.g., "FoodPacks_10")
+          // Check raw donations string (format: "FoodPacks_10;Medicines_5;")
+          const donationsRaw = (donor.donations || '').toLowerCase();
           if (donationsRaw.includes(searchItem)) return true;
           
-          // Check if item exists in formatted string (e.g., "Food Packs (10)")
-          // Remove quantities and normalize for comparison
-          const normalizedFormatted = donationsFormatted.replace(/\(\d+\)/g, '').replace(/\s+/g, '');
-          return normalizedFormatted.includes(searchItem);
+          // Check formatted string (format: "Food Packs (10), Medicines (5)")
+          const donationsFormatted = (donor.donationsFormatted || '').toLowerCase();
+          // Split by comma to get individual items
+          const items = donationsFormatted.split(',').map(item => item.trim());
+          
+          // Check each item individually
+          for (let item of items) {
+            // Remove quantity like "(10)" and normalize spaces
+            const normalizedItem = item.replace(/\(\d+\)/g, '').replace(/\s+/g, '').trim();
+            if (normalizedItem === searchItem || normalizedItem.includes(searchItem)) {
+              return true;
+            }
+          }
+          
+          return false;
         });
       }
       
