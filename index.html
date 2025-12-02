@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Flood Relief Registration</title>
+  <title>Flood Relief Management System</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     * {
@@ -39,6 +39,15 @@
       font-size: 16px;
       -webkit-appearance: none;
       appearance: none;
+    }
+    input[type="checkbox"] {
+      width: auto;
+      height: auto;
+      padding: 0;
+      margin: 0;
+      cursor: pointer;
+      -webkit-appearance: checkbox;
+      appearance: checkbox;
     }
     textarea {
       min-height: 100px;
@@ -567,103 +576,103 @@
     <p style="font-size: 14px; color: #666; margin: 5px 0 10px 0;">✓ Check all districts where you can deliver supplies</p>
     <div id="transport-service-districts" style="max-height: 300px; overflow-y: auto; border: 1px solid #ccc; border-radius: 8px; padding: 10px; background: white;">
       <label style="display: flex; align-items: center; padding: 10px; margin: 0; cursor: pointer; border-bottom: 1px solid #eee;">
-        <input type="checkbox" name="service-district" value="Ampara" style="width: auto; margin-right: 10px; transform: scale(1.3);">
+        <input type="checkbox" name="service-district" value="Ampara" style="margin-right: 10px; transform: scale(1.3);">
         <span style="font-weight: normal; font-size: 16px;">Ampara</span>
       </label>
       <label style="display: flex; align-items: center; padding: 10px; margin: 0; cursor: pointer; border-bottom: 1px solid #eee;">
-        <input type="checkbox" name="service-district" value="Anuradhapura" style="width: auto; margin-right: 10px; transform: scale(1.3);">
+        <input type="checkbox" name="service-district" value="Anuradhapura" style="margin-right: 10px; transform: scale(1.3);">
         <span style="font-weight: normal; font-size: 16px;">Anuradhapura</span>
       </label>
       <label style="display: flex; align-items: center; padding: 10px; margin: 0; cursor: pointer; border-bottom: 1px solid #eee;">
-        <input type="checkbox" name="service-district" value="Badulla" style="width: auto; margin-right: 10px; transform: scale(1.3);">
+        <input type="checkbox" name="service-district" value="Badulla" style="margin-right: 10px; transform: scale(1.3);">
         <span style="font-weight: normal; font-size: 16px;">Badulla</span>
       </label>
       <label style="display: flex; align-items: center; padding: 10px; margin: 0; cursor: pointer; border-bottom: 1px solid #eee;">
-        <input type="checkbox" name="service-district" value="Batticaloa" style="width: auto; margin-right: 10px; transform: scale(1.3);">
+        <input type="checkbox" name="service-district" value="Batticaloa" style="margin-right: 10px; transform: scale(1.3);">
         <span style="font-weight: normal; font-size: 16px;">Batticaloa</span>
       </label>
       <label style="display: flex; align-items: center; padding: 10px; margin: 0; cursor: pointer; border-bottom: 1px solid #eee;">
-        <input type="checkbox" name="service-district" value="Colombo" style="width: auto; margin-right: 10px; transform: scale(1.3);">
+        <input type="checkbox" name="service-district" value="Colombo" style="margin-right: 10px; transform: scale(1.3);">
         <span style="font-weight: normal; font-size: 16px;">Colombo</span>
       </label>
       <label style="display: flex; align-items: center; padding: 10px; margin: 0; cursor: pointer; border-bottom: 1px solid #eee;">
-        <input type="checkbox" name="service-district" value="Galle" style="width: auto; margin-right: 10px; transform: scale(1.3);">
+        <input type="checkbox" name="service-district" value="Galle" style="margin-right: 10px; transform: scale(1.3);">
         <span style="font-weight: normal; font-size: 16px;">Galle</span>
       </label>
       <label style="display: flex; align-items: center; padding: 10px; margin: 0; cursor: pointer; border-bottom: 1px solid #eee;">
-        <input type="checkbox" name="service-district" value="Gampaha" style="width: auto; margin-right: 10px; transform: scale(1.3);">
+        <input type="checkbox" name="service-district" value="Gampaha" style="margin-right: 10px; transform: scale(1.3);">
         <span style="font-weight: normal; font-size: 16px;">Gampaha</span>
       </label>
       <label style="display: flex; align-items: center; padding: 10px; margin: 0; cursor: pointer; border-bottom: 1px solid #eee;">
-        <input type="checkbox" name="service-district" value="Hambantota" style="width: auto; margin-right: 10px; transform: scale(1.3);">
+        <input type="checkbox" name="service-district" value="Hambantota" style="margin-right: 10px; transform: scale(1.3);">
         <span style="font-weight: normal; font-size: 16px;">Hambantota</span>
       </label>
       <label style="display: flex; align-items: center; padding: 10px; margin: 0; cursor: pointer; border-bottom: 1px solid #eee;">
-        <input type="checkbox" name="service-district" value="Jaffna" style="width: auto; margin-right: 10px; transform: scale(1.3);">
+        <input type="checkbox" name="service-district" value="Jaffna" style="margin-right: 10px; transform: scale(1.3);">
         <span style="font-weight: normal; font-size: 16px;">Jaffna</span>
       </label>
       <label style="display: flex; align-items: center; padding: 10px; margin: 0; cursor: pointer; border-bottom: 1px solid #eee;">
-        <input type="checkbox" name="service-district" value="Kalutara" style="width: auto; margin-right: 10px; transform: scale(1.3);">
+        <input type="checkbox" name="service-district" value="Kalutara" style="margin-right: 10px; transform: scale(1.3);">
         <span style="font-weight: normal; font-size: 16px;">Kalutara</span>
       </label>
       <label style="display: flex; align-items: center; padding: 10px; margin: 0; cursor: pointer; border-bottom: 1px solid #eee;">
-        <input type="checkbox" name="service-district" value="Kandy" style="width: auto; margin-right: 10px; transform: scale(1.3);">
+        <input type="checkbox" name="service-district" value="Kandy" style="margin-right: 10px; transform: scale(1.3);">
         <span style="font-weight: normal; font-size: 16px;">Kandy</span>
       </label>
       <label style="display: flex; align-items: center; padding: 10px; margin: 0; cursor: pointer; border-bottom: 1px solid #eee;">
-        <input type="checkbox" name="service-district" value="Kegalle" style="width: auto; margin-right: 10px; transform: scale(1.3);">
+        <input type="checkbox" name="service-district" value="Kegalle" style="margin-right: 10px; transform: scale(1.3);">
         <span style="font-weight: normal; font-size: 16px;">Kegalle</span>
       </label>
       <label style="display: flex; align-items: center; padding: 10px; margin: 0; cursor: pointer; border-bottom: 1px solid #eee;">
-        <input type="checkbox" name="service-district" value="Kilinochchi" style="width: auto; margin-right: 10px; transform: scale(1.3);">
+        <input type="checkbox" name="service-district" value="Kilinochchi" style="margin-right: 10px; transform: scale(1.3);">
         <span style="font-weight: normal; font-size: 16px;">Kilinochchi</span>
       </label>
       <label style="display: flex; align-items: center; padding: 10px; margin: 0; cursor: pointer; border-bottom: 1px solid #eee;">
-        <input type="checkbox" name="service-district" value="Kurunegala" style="width: auto; margin-right: 10px; transform: scale(1.3);">
+        <input type="checkbox" name="service-district" value="Kurunegala" style="margin-right: 10px; transform: scale(1.3);">
         <span style="font-weight: normal; font-size: 16px;">Kurunegala</span>
       </label>
       <label style="display: flex; align-items: center; padding: 10px; margin: 0; cursor: pointer; border-bottom: 1px solid #eee;">
-        <input type="checkbox" name="service-district" value="Mannar" style="width: auto; margin-right: 10px; transform: scale(1.3);">
+        <input type="checkbox" name="service-district" value="Mannar" style="margin-right: 10px; transform: scale(1.3);">
         <span style="font-weight: normal; font-size: 16px;">Mannar</span>
       </label>
       <label style="display: flex; align-items: center; padding: 10px; margin: 0; cursor: pointer; border-bottom: 1px solid #eee;">
-        <input type="checkbox" name="service-district" value="Matale" style="width: auto; margin-right: 10px; transform: scale(1.3);">
+        <input type="checkbox" name="service-district" value="Matale" style="margin-right: 10px; transform: scale(1.3);">
         <span style="font-weight: normal; font-size: 16px;">Matale</span>
       </label>
       <label style="display: flex; align-items: center; padding: 10px; margin: 0; cursor: pointer; border-bottom: 1px solid #eee;">
-        <input type="checkbox" name="service-district" value="Matara" style="width: auto; margin-right: 10px; transform: scale(1.3);">
+        <input type="checkbox" name="service-district" value="Matara" style="margin-right: 10px; transform: scale(1.3);">
         <span style="font-weight: normal; font-size: 16px;">Matara</span>
       </label>
       <label style="display: flex; align-items: center; padding: 10px; margin: 0; cursor: pointer; border-bottom: 1px solid #eee;">
-        <input type="checkbox" name="service-district" value="Monaragala" style="width: auto; margin-right: 10px; transform: scale(1.3);">
+        <input type="checkbox" name="service-district" value="Monaragala" style="margin-right: 10px; transform: scale(1.3);">
         <span style="font-weight: normal; font-size: 16px;">Monaragala</span>
       </label>
       <label style="display: flex; align-items: center; padding: 10px; margin: 0; cursor: pointer; border-bottom: 1px solid #eee;">
-        <input type="checkbox" name="service-district" value="Mullaitivu" style="width: auto; margin-right: 10px; transform: scale(1.3);">
+        <input type="checkbox" name="service-district" value="Mullaitivu" style="margin-right: 10px; transform: scale(1.3);">
         <span style="font-weight: normal; font-size: 16px;">Mullaitivu</span>
       </label>
       <label style="display: flex; align-items: center; padding: 10px; margin: 0; cursor: pointer; border-bottom: 1px solid #eee;">
-        <input type="checkbox" name="service-district" value="Nuwara Eliya" style="width: auto; margin-right: 10px; transform: scale(1.3);">
+        <input type="checkbox" name="service-district" value="Nuwara Eliya" style="margin-right: 10px; transform: scale(1.3);">
         <span style="font-weight: normal; font-size: 16px;">Nuwara Eliya</span>
       </label>
       <label style="display: flex; align-items: center; padding: 10px; margin: 0; cursor: pointer; border-bottom: 1px solid #eee;">
-        <input type="checkbox" name="service-district" value="Polonnaruwa" style="width: auto; margin-right: 10px; transform: scale(1.3);">
+        <input type="checkbox" name="service-district" value="Polonnaruwa" style="margin-right: 10px; transform: scale(1.3);">
         <span style="font-weight: normal; font-size: 16px;">Polonnaruwa</span>
       </label>
       <label style="display: flex; align-items: center; padding: 10px; margin: 0; cursor: pointer; border-bottom: 1px solid #eee;">
-        <input type="checkbox" name="service-district" value="Puttalam" style="width: auto; margin-right: 10px; transform: scale(1.3);">
+        <input type="checkbox" name="service-district" value="Puttalam" style="margin-right: 10px; transform: scale(1.3);">
         <span style="font-weight: normal; font-size: 16px;">Puttalam</span>
       </label>
       <label style="display: flex; align-items: center; padding: 10px; margin: 0; cursor: pointer; border-bottom: 1px solid #eee;">
-        <input type="checkbox" name="service-district" value="Ratnapura" style="width: auto; margin-right: 10px; transform: scale(1.3);">
+        <input type="checkbox" name="service-district" value="Ratnapura" style="margin-right: 10px; transform: scale(1.3);">
         <span style="font-weight: normal; font-size: 16px;">Ratnapura</span>
       </label>
       <label style="display: flex; align-items: center; padding: 10px; margin: 0; cursor: pointer; border-bottom: 1px solid #eee;">
-        <input type="checkbox" name="service-district" value="Trincomalee" style="width: auto; margin-right: 10px; transform: scale(1.3);">
+        <input type="checkbox" name="service-district" value="Trincomalee" style="margin-right: 10px; transform: scale(1.3);">
         <span style="font-weight: normal; font-size: 16px;">Trincomalee</span>
       </label>
       <label style="display: flex; align-items: center; padding: 10px; margin: 0; cursor: pointer;">
-        <input type="checkbox" name="service-district" value="Vavuniya" style="width: auto; margin-right: 10px; transform: scale(1.3);">
+        <input type="checkbox" name="service-district" value="Vavuniya" style="margin-right: 10px; transform: scale(1.3);">
         <span style="font-weight: normal; font-size: 16px;">Vavuniya</span>
       </label>
     </div>
