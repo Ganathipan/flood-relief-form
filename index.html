@@ -357,9 +357,9 @@
     <label>Second Phone Number (Optional)</label>
     <input type="text" id="transport-phone2">
 
-    <label>District</label>
-    <select id="transport-district">
-      <option value="">Select District</option>
+    <label>Home District (Your Base Location)</label>
+    <select id="transport-home-district">
+      <option value="">Select Your Home District</option>
       <option>Ampara</option>
       <option>Anuradhapura</option>
       <option>Badulla</option>
@@ -386,6 +386,36 @@
       <option>Trincomalee</option>
       <option>Vavuniya</option>
     </select>
+
+    <label>Districts You Can Service (Select multiple - hold Ctrl/Cmd)</label>
+    <select id="transport-service-districts" multiple size="8">
+      <option>Ampara</option>
+      <option>Anuradhapura</option>
+      <option>Badulla</option>
+      <option>Batticaloa</option>
+      <option>Colombo</option>
+      <option>Galle</option>
+      <option>Gampaha</option>
+      <option>Hambantota</option>
+      <option>Jaffna</option>
+      <option>Kalutara</option>
+      <option>Kandy</option>
+      <option>Kegalle</option>
+      <option>Kilinochchi</option>
+      <option>Kurunegala</option>
+      <option>Mannar</option>
+      <option>Matale</option>
+      <option>Matara</option>
+      <option>Monaragala</option>
+      <option>Mullaitivu</option>
+      <option>Nuwara Eliya</option>
+      <option>Polonnaruwa</option>
+      <option>Puttalam</option>
+      <option>Ratnapura</option>
+      <option>Trincomalee</option>
+      <option>Vavuniya</option>
+    </select>
+    <p style="font-size: 12px; color: #666; margin-top: 5px;">💡 Tip: Hold Ctrl (Windows) or Cmd (Mac) and click to select multiple districts</p>
 
     <label>Vehicle Type</label>
     <select id="vehicle-type">
@@ -768,12 +798,23 @@
     }
 
     function submitTransportForm() {
+      // Get selected service districts
+      const serviceDistrictsSelect = document.getElementById("transport-service-districts");
+      const selectedOptions = Array.from(serviceDistrictsSelect.selectedOptions);
+      const serviceDistricts = selectedOptions.map(option => option.value);
+      
+      if (serviceDistricts.length === 0) {
+        alert("Please select at least one district you can service.");
+        return;
+      }
+
       const data = {
         type: "transport",
         name: document.getElementById("transport-name").value,
         phone: document.getElementById("transport-phone").value,
         phone2: document.getElementById("transport-phone2").value,
-        district: document.getElementById("transport-district").value,
+        homeDistrict: document.getElementById("transport-home-district").value,
+        serviceDistricts: serviceDistricts.join(", "),
         vehicleType: document.getElementById("vehicle-type").value,
         vehicleCapacity: document.getElementById("vehicle-capacity").value,
         gps: document.getElementById("transport-gps").value,
@@ -1007,7 +1048,7 @@
       const list = document.getElementById('transport-list');
       
       if (!transports || transports.length === 0) {
-        list.innerHTML = '<div class="loading">No transport providers available in this district</div>';
+        list.innerHTML = '<div class="loading">No transport providers available for this district</div>';
         return;
       }
 
@@ -1019,6 +1060,8 @@
             <label for="transport-${index}" style="cursor: pointer; display: inline;">
               <h5>🚚 ${transport.name}</h5>
               <p><strong>📞 Phone:</strong> ${transport.phone}</p>
+              <p><strong>🏠 Home District:</strong> ${transport.homeDistrict}</p>
+              <p><strong>🗺️ Services:</strong> ${transport.serviceDistricts}</p>
               <p><strong>🚗 Vehicle:</strong> ${transport.vehicleType} (Capacity: ${transport.vehicleCapacity})</p>
               <p><strong>✅ Availability:</strong> ${transport.availability}</p>
               ${transport.gps ? `<p><strong>📍 Location:</strong> ${transport.gps}</p>` : ''}
@@ -1054,6 +1097,7 @@
         <p><strong>Donating:</strong> ${coordData.donor.donationsFormatted}</p>
         <hr>
         <p><strong>🚚 Transport:</strong> ${coordData.transport.name} (${coordData.transport.phone})</p>
+        <p><strong>Home District:</strong> ${coordData.transport.homeDistrict}</p>
         <p><strong>Vehicle:</strong> ${coordData.transport.vehicleType} - ${coordData.transport.availability}</p>
       `;
       

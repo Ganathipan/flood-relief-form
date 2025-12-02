@@ -14,6 +14,8 @@ A comprehensive web-based registration system for managing flood relief efforts 
 
 2. **Transport Provider Registration**
    - Register available vehicles
+   - **Home district** (base location)
+   - **Service districts** (multiple districts they can deliver to)
    - Vehicle type and capacity information
    - Availability status
    - GPS location tracking
@@ -116,12 +118,13 @@ Upload `index.html` to your web hosting service or use it locally.
 | B | Name/Organization |
 | C | Phone |
 | D | Second Phone |
-| E | District |
-| F | Vehicle Type |
-| G | Vehicle Capacity |
-| H | GPS |
-| I | Availability |
-| J | Notes |
+| E | Home District |
+| F | Service Districts |
+| G | Vehicle Type |
+| H | Vehicle Capacity |
+| I | GPS |
+| J | Availability |
+| K | Notes |
 
 ### AffectedResponses Sheet
 | Column | Field |

@@ -157,18 +157,21 @@ function getCoordinationData(district) {
       var transportData = transportSheet.getDataRange().getValues();
       for (var i = 1; i < transportData.length; i++) {
         var row = transportData[i];
-        if (row[4] === district) { // District column
+        var serviceDistricts = row[5] || ""; // Column F: Service Districts
+        // Check if the requested district is in the service districts list
+        if (serviceDistricts.indexOf(district) !== -1) {
           transports.push({
             timestamp: formatDate(row[0]),
             name: row[1] || "",
             phone: row[2] || "",
             phone2: row[3] || "",
-            district: row[4] || "",
-            vehicleType: row[5] || "",
-            vehicleCapacity: row[6] || "",
-            gps: row[7] || "",
-            availability: row[8] || "",
-            notes: row[9] || ""
+            homeDistrict: row[4] || "",
+            serviceDistricts: row[5] || "",
+            vehicleType: row[6] || "",
+            vehicleCapacity: row[7] || "",
+            gps: row[8] || "",
+            availability: row[9] || "",
+            notes: row[10] || ""
           });
         }
       }
@@ -350,12 +353,13 @@ function doPost(e) {
           data.name,             // B: Name/Organization
           data.phone,            // C: Phone
           data.phone2,           // D: Second Phone Number (Optional)
-          data.district,         // E: District
-          data.vehicleType,      // F: Vehicle Type
-          data.vehicleCapacity,  // G: Vehicle Capacity
-          data.gps,              // H: GPS ("lat, lng")
-          data.availability,     // I: Availability
-          data.notes             // J: Notes
+          data.homeDistrict,     // E: Home District
+          data.serviceDistricts, // F: Service Districts (comma-separated)
+          data.vehicleType,      // G: Vehicle Type
+          data.vehicleCapacity,  // H: Vehicle Capacity
+          data.gps,              // I: GPS ("lat, lng")
+          data.availability,     // J: Availability
+          data.notes             // K: Notes
         ];
         break;
 
@@ -397,7 +401,7 @@ function doPost(e) {
           headers = ["Timestamp", "Name", "Phone", "Second Phone", "District", "Donations", "GPS", "Notes"];
           break;
         case "TransportResponses":
-          headers = ["Timestamp", "Name/Organization", "Phone", "Second Phone", "District", "Vehicle Type", "Vehicle Capacity", "GPS", "Availability", "Notes"];
+          headers = ["Timestamp", "Name/Organization", "Phone", "Second Phone", "Home District", "Service Districts", "Vehicle Type", "Vehicle Capacity", "GPS", "Availability", "Notes"];
           break;
         case "AffectedResponses":
           headers = ["Timestamp", "Name", "Phone", "Second Phone", "District", "GPS", "People Count", "Urgent Needs", "Situation/Notes"];
