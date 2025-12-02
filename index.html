@@ -870,8 +870,17 @@
     <button class="full-width-submit" onclick="submitAffectedForm()">Submit</button>
   </div>
 
+  <!-- Supabase JS Client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
   <script>
-    const scriptURL = "https://script.google.com/macros/s/AKfycbxNrPQojUsPiq6P2jWC1Ea2EtWsyPN-ImOnovUmCZnbpxNgB3m4JH_OE-xQNvOBR1cjoA/exec";
+    // ⚠️ REPLACE THESE WITH YOUR SUPABASE PROJECT CREDENTIALS
+    // Get these from: Supabase Dashboard → Project Settings → API
+    const SUPABASE_URL = 'YOUR_PROJECT_URL_HERE'; // e.g., 'https://xxxxx.supabase.co'
+    const SUPABASE_KEY = 'YOUR_ANON_KEY_HERE';    // Your anon/public key
+    
+    // Initialize Supabase client
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     let allNeedsData = [];
     let allDonorsData = [];
@@ -930,20 +939,50 @@
     }
 
     // Load needs from affected people (for donors)
-    function loadNeeds() {
+    async function loadNeeds() {
       const needsList = document.getElementById('needs-list');
       needsList.innerHTML = '<div class="loading">Loading needs data...</div>';
 
-      fetch(scriptURL + '?action=getNeeds')
-        .then(res => res.json())
-        .then(data => {
-          allNeedsData = data;
-          displayNeeds(allNeedsData);
+      try {
+        const { data, error } = await supabase
+          .from('affected_responses')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        // Format data to match previous structure
+        allNeedsData = data.map(item => ({
+          district: item.district,
+          name: item.name,
+          phone: item.phone,
+          phone2: item.phone2,
+          peopleCount: item.people_count,
+          needsFormatted: formatNeedsString(item.needs),
+          gps: item.gps,
+          notes: item.notes,
+          timestamp: new Date(item.created_at).toLocaleString()
+        }));
+
+        displayNeeds(allNeedsData);
+      } catch (err) {
+        needsList.innerHTML = '<div class="loading">Error loading needs data. Please try again.</div>';
+        console.error('Error:', err);
+      }
+    }
+
+    // Helper function to format needs string (e.g., "FoodPacks_50;WaterBottles_100;" → "Food Packs (50), Water Bottles (100)")
+    function formatNeedsString(needsStr) {
+      if (!needsStr) return '';
+      return needsStr
+        .split(';')
+        .filter(item => item.trim())
+        .map(item => {
+          const [name, qty] = item.split('_');
+          const readable = name.replace(/([A-Z])/g, ' $1').trim();
+          return `${readable} (${qty})`;
         })
-        .catch(err => {
-          needsList.innerHTML = '<div class="loading">Error loading needs data. Please try again.</div>';
-          console.error('Error:', err);
-        });
+        .join(', ');
     }
 
     // Display needs in the list
@@ -1032,7 +1071,7 @@
       );
     }
   
-    function submitForm() {
+    async function submitForm() {
       const rows = document.querySelectorAll("#donationTable tbody tr");
       const donationsArray = [];
   
@@ -1054,7 +1093,6 @@
       const donationsString = donationsArray.join("");
   
       const data = {
-        type: "donor",
         name: document.getElementById("name").value,
         phone: document.getElementById("phone").value,
         phone2: document.getElementById("phone2").value,
@@ -1063,18 +1101,44 @@
         gps: document.getElementById("gps").value,
         notes: document.getElementById("notes").value
       };
-  
-      fetch(scriptURL, {
-        method: "POST",
-        body: JSON.stringify(data)
-      })
-      .then(res => res.text())
-      .then(text => {
-        alert("Server says: " + text);
-      })
-      .catch(err => {
-        alert("Error: " + err);
-      });
+
+      try {
+        const { error } = await supabase
+          .from('donor_responses')
+          .insert([data]);
+
+        if (error) throw error;
+
+        alert("Thank you! Your donation has been registered successfully.");
+        // Reset form
+        document.getElementById("name").value = '';
+        document.getElementById("phone").value = '';
+        document.getElementById("phone2").value = '';
+        document.getElementById("district").value = '';
+        document.getElementById("gps").value = '';
+        document.getElementById("notes").value = '';
+        document.querySelector("#donationTable tbody").innerHTML = `
+          <tr>
+            <td>
+              <select class="donation-item">
+                <option value="">Select item</option>
+                <option>Food Packs</option>
+                <option>Water Bottles</option>
+                <option>Clothes</option>
+                <option>Medicines</option>
+                <option>Sanitary Items</option>
+                <option>Bedding</option>
+              </select>
+            </td>
+            <td>
+              <input type="number" class="donation-qty" min="1" placeholder="Qty">
+            </td>
+          </tr>
+        `;
+      } catch (err) {
+        alert("Error submitting form: " + err.message);
+        console.error('Error:', err);
+      }
     }
 
     // TRANSPORT Functions
@@ -1095,7 +1159,7 @@
       );
     }
 
-    function submitTransportForm() {
+    async function submitTransportForm() {
       // Get selected service districts from checkboxes
       const checkboxes = document.querySelectorAll('input[name="service-district"]:checked');
       const serviceDistricts = Array.from(checkboxes).map(cb => cb.value);
@@ -1106,30 +1170,41 @@
       }
 
       const data = {
-        type: "transport",
         name: document.getElementById("transport-name").value,
         phone: document.getElementById("transport-phone").value,
         phone2: document.getElementById("transport-phone2").value,
-        homeDistrict: document.getElementById("transport-home-district").value,
-        serviceDistricts: serviceDistricts.join(", "),
-        vehicleType: document.getElementById("vehicle-type").value,
-        vehicleCapacity: document.getElementById("vehicle-capacity").value,
+        home_district: document.getElementById("transport-home-district").value,
+        service_districts: serviceDistricts.join(", "),
+        vehicle_type: document.getElementById("vehicle-type").value,
+        vehicle_capacity: document.getElementById("vehicle-capacity").value,
         gps: document.getElementById("transport-gps").value,
         availability: document.getElementById("availability").value,
         notes: document.getElementById("transport-notes").value
       };
 
-      fetch(scriptURL, {
-        method: "POST",
-        body: JSON.stringify(data)
-      })
-      .then(res => res.text())
-      .then(text => {
-        alert("Server says: " + text);
-      })
-      .catch(err => {
-        alert("Error: " + err);
-      });
+      try {
+        const { error } = await supabase
+          .from('transport_responses')
+          .insert([data]);
+
+        if (error) throw error;
+
+        alert("Thank you! Your transport support has been registered successfully.");
+        // Reset form
+        document.getElementById("transport-name").value = '';
+        document.getElementById("transport-phone").value = '';
+        document.getElementById("transport-phone2").value = '';
+        document.getElementById("transport-home-district").value = '';
+        document.querySelectorAll('input[name="service-district"]:checked').forEach(cb => cb.checked = false);
+        document.getElementById("vehicle-type").value = '';
+        document.getElementById("vehicle-capacity").value = '';
+        document.getElementById("transport-gps").value = '';
+        document.getElementById("availability").value = '';
+        document.getElementById("transport-notes").value = '';
+      } catch (err) {
+        alert("Error submitting form: " + err.message);
+        console.error('Error:', err);
+      }
     }
 
     // AFFECTED PEOPLE Functions
@@ -1175,7 +1250,7 @@
       );
     }
 
-    function submitAffectedForm() {
+    async function submitAffectedForm() {
       const rows = document.querySelectorAll("#needsTable tbody tr");
       const needsArray = [];
   
@@ -1197,46 +1272,105 @@
       const needsString = needsArray.join("");
   
       const data = {
-        type: "affected",
         name: document.getElementById("affected-name").value,
         phone: document.getElementById("affected-phone").value,
         phone2: document.getElementById("affected-phone2").value,
         district: document.getElementById("affected-district").value,
         gps: document.getElementById("affected-gps").value,
-        peopleCount: document.getElementById("people-count").value,
+        people_count: parseInt(document.getElementById("people-count").value),
         needs: needsString,
         notes: document.getElementById("affected-notes").value
       };
 
-      fetch(scriptURL, {
-        method: "POST",
-        body: JSON.stringify(data)
-      })
-      .then(res => res.text())
-      .then(text => {
-        alert("Server says: " + text);
-      })
-      .catch(err => {
-        alert("Error: " + err);
-      });
+      try {
+        const { error } = await supabase
+          .from('affected_responses')
+          .insert([data]);
+
+        if (error) throw error;
+
+        alert("Thank you! Your urgent needs have been registered. Help is on the way.");
+        // Reset form
+        document.getElementById("affected-name").value = '';
+        document.getElementById("affected-phone").value = '';
+        document.getElementById("affected-phone2").value = '';
+        document.getElementById("affected-district").value = '';
+        document.getElementById("affected-gps").value = '';
+        document.getElementById("people-count").value = '';
+        document.getElementById("affected-notes").value = '';
+        document.querySelector("#needsTable tbody").innerHTML = `
+          <tr>
+            <td>
+              <select class="need-item">
+                <option value="">Select item</option>
+                <option>Food Packs</option>
+                <option>Water Bottles</option>
+                <option>Clothes</option>
+                <option>Medicines</option>
+                <option>Sanitary Items</option>
+                <option>Bedding</option>
+                <option>Shelter</option>
+                <option>Medical Help</option>
+              </select>
+            </td>
+            <td>
+              <input type="number" class="need-qty" min="1" placeholder="Qty">
+            </td>
+          </tr>
+        `;
+        
+        // Reload needs list to show updated data
+        loadNeeds();
+      } catch (err) {
+        alert("Error submitting form: " + err.message);
+        console.error('Error:', err);
+      }
     }
 
     // Load needs and donors for transport supporters
-    function loadTransportNeeds() {
+    async function loadTransportNeeds() {
       const needsList = document.getElementById('transport-needs-list');
       needsList.innerHTML = '<div class="loading">Loading needs and available supplies...</div>';
 
-      Promise.all([
-        fetch(scriptURL + '?action=getNeeds').then(res => res.json()),
-        fetch(scriptURL + '?action=getDonors').then(res => res.json())
-      ])
-      .then(([needs, donors]) => {
+      try {
+        const [needsResult, donorsResult] = await Promise.all([
+          supabase.from('affected_responses').select('*').order('created_at', { ascending: false }),
+          supabase.from('donor_responses').select('*').order('created_at', { ascending: false })
+        ]);
+
+        if (needsResult.error) throw needsResult.error;
+        if (donorsResult.error) throw donorsResult.error;
+
+        // Format needs data
+        const needs = needsResult.data.map(item => ({
+          district: item.district,
+          name: item.name,
+          phone: item.phone,
+          phone2: item.phone2,
+          peopleCount: item.people_count,
+          needsFormatted: formatNeedsString(item.needs),
+          gps: item.gps,
+          notes: item.notes,
+          timestamp: new Date(item.created_at).toLocaleString()
+        }));
+
+        // Format donors data
+        const donors = donorsResult.data.map(item => ({
+          district: item.district,
+          name: item.name,
+          phone: item.phone,
+          phone2: item.phone2,
+          donationsFormatted: formatNeedsString(item.donations),
+          gps: item.gps,
+          notes: item.notes,
+          timestamp: new Date(item.created_at).toLocaleString()
+        }));
+
         displayTransportNeeds(needs, donors);
-      })
-      .catch(err => {
+      } catch (err) {
         needsList.innerHTML = '<div class="loading">Error loading data. Please try again.</div>';
         console.error('Error:', err);
-      });
+      }
     }
 
     function displayTransportNeeds(needs, donors) {
