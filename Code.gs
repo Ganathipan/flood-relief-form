@@ -51,7 +51,11 @@ function getNeedsData() {
         peopleCount: row[6] || "",         // G: People Count
         needs: needsString,                // H: Urgent Needs (raw)
         needsFormatted: needsFormatted,    // H: Urgent Needs (formatted)
-        notes: row[8] || ""                // I: Situation/Notes
+        notes: row[8] || "",               // I: Situation/Notes
+        dsDivision: row[9] || "",          // J: DS Division
+        gnDivision: row[10] || "",         // K: GN Division
+        roadName: row[11] || "",           // L: Road Name
+        fullAddress: row[12] || ""         // M: Full Address
       });
     }
     
@@ -103,7 +107,11 @@ function getDonorsData() {
         donations: donationsString,           // F: Donations (raw)
         donationsFormatted: donationsFormatted, // F: Donations (formatted)
         gps: row[6] || "",                    // G: GPS
-        notes: row[7] || ""                   // H: Notes
+        notes: row[7] || "",                  // H: Notes
+        dsDivision: row[8] || "",             // I: DS Division
+        gnDivision: row[9] || "",             // J: GN Division
+        roadName: row[10] || "",              // K: Road Name
+        fullAddress: row[11] || ""            // L: Full Address
       });
     }
     
@@ -399,7 +407,11 @@ function doPost(e) {
           data.district,     // E: District
           data.donations,    // F: Donations (string like FoodPacks_10;WaterBottles_5;)
           data.gps,          // G: GPS ("lat, lng")
-          data.notes         // H: Notes
+          data.notes,        // H: Notes
+          data.dsDivision || "",   // I: DS Division
+          data.gnDivision || "",   // J: GN Division
+          data.roadName || "",     // K: Road Name
+          data.fullAddress || ""   // L: Full Address
         ];
         break;
 
@@ -416,7 +428,11 @@ function doPost(e) {
           data.vehicleCapacity,  // H: Vehicle Capacity
           data.gps,              // I: GPS ("lat, lng")
           data.availability,     // J: Availability
-          data.notes             // K: Notes
+          data.notes,            // K: Notes
+          data.dsDivision || "", // L: DS Division
+          data.gnDivision || "", // M: GN Division
+          data.roadName || "",   // N: Road Name
+          data.fullAddress || "" // O: Full Address
         ];
         break;
 
@@ -431,7 +447,11 @@ function doPost(e) {
           data.gps,          // F: GPS ("lat, lng")
           data.peopleCount,  // G: Number of People Affected
           data.needs,        // H: Urgent Needs (string like FoodPacks_10;WaterBottles_5;)
-          data.notes         // I: Current Situation/Additional Info
+          data.notes,        // I: Current Situation/Additional Info
+          data.dsDivision || "",   // J: DS Division
+          data.gnDivision || "",   // K: GN Division
+          data.roadName || "",     // L: Road Name
+          data.fullAddress || ""   // M: Full Address
         ];
         break;
 
@@ -455,13 +475,13 @@ function doPost(e) {
       var headers;
       switch(sheetName) {
         case "DonorResponses":
-          headers = ["Timestamp", "Name", "Phone", "Second Phone", "District", "Donations", "GPS", "Notes"];
+          headers = ["Timestamp", "Name", "Phone", "Second Phone", "District", "Donations", "GPS", "Notes", "DS Division", "GN Division", "Road Name", "Full Address"];
           break;
         case "TransportResponses":
-          headers = ["Timestamp", "Name/Organization", "Phone", "Second Phone", "Home District", "Service Districts", "Vehicle Type", "Vehicle Capacity", "GPS", "Availability", "Notes"];
+          headers = ["Timestamp", "Name/Organization", "Phone", "Second Phone", "Home District", "Service Districts", "Vehicle Type", "Vehicle Capacity", "GPS", "Availability", "Notes", "DS Division", "GN Division", "Road Name", "Full Address"];
           break;
         case "AffectedResponses":
-          headers = ["Timestamp", "Name", "Phone", "Second Phone", "District", "GPS", "People Count", "Urgent Needs", "Situation/Notes"];
+          headers = ["Timestamp", "Name", "Phone", "Second Phone", "District", "GPS", "People Count", "Urgent Needs", "Situation/Notes", "DS Division", "GN Division", "Road Name", "Full Address"];
           break;
       }
       sheet.appendRow(headers);

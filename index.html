@@ -3,6 +3,8 @@
 <head>
   <title>Flood Relief Management System</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Google Maps API for Reverse Geocoding -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBhYourAPIKeyHere&libraries=places"></script>
   <style>
     * {
       box-sizing: border-box;
@@ -488,6 +490,15 @@
   <label>Your GPS Location</label>
   <input type="text" id="gps" readonly placeholder="Click 'Get My Location'">
   <button type="button" onclick="getLocation()">Get My Location</button>
+  <div id="location-details" style="margin-top: 10px; padding: 10px; background: #e8f5e9; border-radius: 5px; display: none;">
+    <p style="margin: 5px 0; font-size: 14px;"><strong>📍 Detected Location:</strong></p>
+    <p id="detected-address" style="margin: 5px 0; font-size: 14px; color: #666;"></p>
+  </div>
+  <!-- Hidden fields for location data -->
+  <input type="hidden" id="ds-division" value="">
+  <input type="hidden" id="gn-division" value="">
+  <input type="hidden" id="road-name" value="">
+  <input type="hidden" id="full-address" value="">
 
   <!-- Donation table -->
   <label>Donations (item + quantity)</label>
@@ -775,6 +786,15 @@
     <label>Your GPS Location</label>
     <input type="text" id="transport-gps" readonly placeholder="Click 'Get My Location'">
     <button type="button" onclick="getLocationTransport()">Get My Location</button>
+    <div id="transport-location-details" style="margin-top: 10px; padding: 10px; background: #e8f5e9; border-radius: 5px; display: none;">
+      <p style="margin: 5px 0; font-size: 14px;"><strong>📍 Detected Location:</strong></p>
+      <p id="transport-detected-address" style="margin: 5px 0; font-size: 14px; color: #666;"></p>
+    </div>
+    <!-- Hidden fields for location data -->
+    <input type="hidden" id="transport-ds-division" value="">
+    <input type="hidden" id="transport-gn-division" value="">
+    <input type="hidden" id="transport-road-name" value="">
+    <input type="hidden" id="transport-full-address" value="">
 
     <label>Availability</label>
     <select id="availability">
@@ -885,6 +905,15 @@
     <label>Your GPS Location</label>
     <input type="text" id="affected-gps" readonly placeholder="Click 'Get My Location'">
     <button type="button" onclick="getLocationAffected()">Get My Location</button>
+
+    <div id="affected-location-details" style="display:none; background:#e8f5e9; padding:10px; margin:10px 0; border-radius:4px;">
+      <p><strong>📍 Detected Location:</strong></p>
+      <p id="affected-detected-address"></p>
+    </div>
+    <input type="hidden" id="affected-ds-division" value="">
+    <input type="hidden" id="affected-gn-division" value="">
+    <input type="hidden" id="affected-road-name" value="">
+    <input type="hidden" id="affected-full-address" value="">
 
     <label>Number of People Affected</label>
     <input type="number" id="people-count" min="1" required>
@@ -1150,14 +1179,21 @@
 
       let html = '';
       needs.forEach(need => {
+        // Build location info
+        let locationInfo = '';
+        if (need.gnDivision) {
+          locationInfo = `<span class="location-tag" style="background:#e8f5e9; padding:3px 8px; border-radius:3px; font-size:12px; margin-left:5px;">📍 ${need.gnDivision}</span>`;
+        }
+        
         html += `
           <div class="need-card">
-            <h5><span class="district-tag">${need.district}</span> ${need.name}</h5>
+            <h5><span class="district-tag">${need.district}</span>${locationInfo} ${need.name}</h5>
             <p><strong>📞 Contact:</strong> <a href="tel:${need.phone}" style="color: #007bff;">${need.phone}</a></p>
             ${need.phone2 ? `<p><strong>📞 Alt:</strong> <a href="tel:${need.phone2}" style="color: #007bff;">${need.phone2}</a></p>` : ''}
             <p><strong>👥 People Affected:</strong> ${need.peopleCount}</p>
             <p class="urgent"><strong>🆘 Urgent Needs:</strong> ${need.needsFormatted}</p>
-            ${need.gps ? `<p><strong>📍 Location:</strong> <a href="https://www.google.com/maps?q=${need.gps}" target="_blank" style="color: #007bff;">${need.gps}</a></p>` : ''}
+            ${need.gps ? `<p><strong>📍 GPS Location:</strong> <a href="https://www.google.com/maps?q=${need.gps}" target="_blank" style="color: #007bff;">${need.gps}</a></p>` : ''}
+            ${need.fullAddress ? `<p><strong>📍 Address:</strong> ${need.fullAddress}</p>` : ''}
             ${need.notes ? `<p><strong>ℹ️ Situation:</strong> ${need.notes}</p>` : ''}
             <p style="font-size: 12px; color: #999;"><strong>Reported:</strong> ${need.timestamp}</p>
             <div style="margin-top: 15px;">
@@ -1211,13 +1247,20 @@
 
       let html = '';
       donors.forEach(donor => {
+        // Build location info
+        let locationInfo = '';
+        if (donor.gnDivision) {
+          locationInfo = `<span class="location-tag" style="background:#e8f5e9; padding:3px 8px; border-radius:3px; font-size:12px; margin-left:5px;">📍 ${donor.gnDivision}</span>`;
+        }
+        
         html += `
           <div class="need-card" style="border-left: 4px solid #28a745;">
-            <h5><span class="district-tag" style="background: #28a745;">${donor.district}</span> ${donor.name}</h5>
+            <h5><span class="district-tag" style="background: #28a745;">${donor.district}</span>${locationInfo} ${donor.name}</h5>
             <p><strong>📞 Contact:</strong> <a href="tel:${donor.phone}" style="color: #007bff;">${donor.phone}</a></p>
             ${donor.phone2 ? `<p><strong>📞 Alt:</strong> <a href="tel:${donor.phone2}" style="color: #007bff;">${donor.phone2}</a></p>` : ''}
             <p style="color: #28a745;"><strong>🎁 Available Items:</strong> ${donor.donationsFormatted}</p>
-            ${donor.gps ? `<p><strong>📍 Location:</strong> <a href="https://www.google.com/maps?q=${donor.gps}" target="_blank" style="color: #007bff;">${donor.gps}</a></p>` : ''}
+            ${donor.gps ? `<p><strong>📍 GPS Location:</strong> <a href="https://www.google.com/maps?q=${donor.gps}" target="_blank" style="color: #007bff;">${donor.gps}</a></p>` : ''}
+            ${donor.fullAddress ? `<p><strong>📍 Address:</strong> ${donor.fullAddress}</p>` : ''}
             ${donor.notes ? `<p><strong>ℹ️ Notes:</strong> ${donor.notes}</p>` : ''}
             <p style="font-size: 12px; color: #999;"><strong>Registered:</strong> ${donor.timestamp}</p>
             <div style="margin-top: 15px;">
@@ -1271,6 +1314,83 @@
       `;
       tbody.appendChild(row);
     }
+
+    // Reverse Geocoding Function
+    async function reverseGeocode(lat, lng, prefix) {
+      try {
+        const geocoder = new google.maps.Geocoder();
+        const latlng = { lat: parseFloat(lat), lng: parseFloat(lng) };
+        
+        return new Promise((resolve, reject) => {
+          geocoder.geocode({ location: latlng }, (results, status) => {
+            if (status === 'OK' && results[0]) {
+              const addressComponents = results[0].address_components;
+              const formattedAddress = results[0].formatted_address;
+              
+              let district = '';
+              let dsDiv = '';
+              let gnDiv = '';
+              let road = '';
+              
+              // Parse address components
+              addressComponents.forEach(component => {
+                const types = component.types;
+                
+                // District (administrative_area_level_2)
+                if (types.includes('administrative_area_level_2')) {
+                  district = component.long_name;
+                }
+                
+                // DS Division (administrative_area_level_3)
+                if (types.includes('administrative_area_level_3')) {
+                  dsDiv = component.long_name;
+                }
+                
+                // GN Division (administrative_area_level_4 or locality)
+                if (types.includes('administrative_area_level_4') || types.includes('locality')) {
+                  gnDiv = component.long_name;
+                }
+                
+                // Road name
+                if (types.includes('route')) {
+                  road = component.long_name;
+                }
+              });
+              
+              // Populate hidden fields
+              const prefixStr = prefix ? prefix + '-' : '';
+              document.getElementById(prefixStr + 'ds-division').value = dsDiv;
+              document.getElementById(prefixStr + 'gn-division').value = gnDiv;
+              document.getElementById(prefixStr + 'road-name').value = road;
+              document.getElementById(prefixStr + 'full-address').value = formattedAddress;
+              
+              // Show location details
+              const detailsDiv = document.getElementById(prefixStr + 'location-details');
+              const addressP = document.getElementById(prefixStr + 'detected-address');
+              
+              if (detailsDiv && addressP) {
+                addressP.innerHTML = `
+                  <strong>District:</strong> ${district || 'Not detected'}<br>
+                  <strong>DS Division:</strong> ${dsDiv || 'Not detected'}<br>
+                  <strong>GN Division:</strong> ${gnDiv || 'Not detected'}<br>
+                  <strong>Road:</strong> ${road || 'Not detected'}<br>
+                  <strong>Full Address:</strong> ${formattedAddress}
+                `;
+                detailsDiv.style.display = 'block';
+              }
+              
+              resolve({ district, dsDiv, gnDiv, road, formattedAddress });
+            } else {
+              reject(new Error('Geocoding failed: ' + status));
+            }
+          });
+        });
+      } catch (error) {
+        console.error('Reverse geocoding error:', error);
+        alert('Unable to detect location details. Please try again.');
+        throw error;
+      }
+    }
   
     function getLocation() {
       if (!navigator.geolocation) {
@@ -1278,10 +1398,17 @@
         return;
       }
       navigator.geolocation.getCurrentPosition(
-        (pos) => {
+        async (pos) => {
           const lat = pos.coords.latitude.toFixed(6);
           const lng = pos.coords.longitude.toFixed(6);
           document.getElementById("gps").value = lat + ", " + lng;
+          
+          // Reverse geocode to get location details
+          try {
+            await reverseGeocode(lat, lng, '');
+          } catch (error) {
+            console.error('Failed to get location details:', error);
+          }
         },
         (err) => {
           alert("Unable to get location: " + err.message);
@@ -1318,6 +1445,10 @@
         district: document.getElementById("district").value,
         donations: donationsString,
         gps: document.getElementById("gps").value,
+        dsDivision: document.getElementById("ds-division").value,
+        gnDivision: document.getElementById("gn-division").value,
+        roadName: document.getElementById("road-name").value,
+        fullAddress: document.getElementById("full-address").value,
         notes: document.getElementById("notes").value
       };
   
@@ -1341,10 +1472,17 @@
         return;
       }
       navigator.geolocation.getCurrentPosition(
-        (pos) => {
+        async (pos) => {
           const lat = pos.coords.latitude.toFixed(6);
           const lng = pos.coords.longitude.toFixed(6);
           document.getElementById("transport-gps").value = lat + ", " + lng;
+          
+          // Reverse geocode to get location details
+          try {
+            await reverseGeocode(lat, lng, 'transport');
+          } catch (error) {
+            console.error('Failed to get location details:', error);
+          }
         },
         (err) => {
           alert("Unable to get location: " + err.message);
@@ -1372,6 +1510,10 @@
         vehicleType: document.getElementById("vehicle-type").value,
         vehicleCapacity: document.getElementById("vehicle-capacity").value,
         gps: document.getElementById("transport-gps").value,
+        dsDivision: document.getElementById("transport-ds-division").value,
+        gnDivision: document.getElementById("transport-gn-division").value,
+        roadName: document.getElementById("transport-road-name").value,
+        fullAddress: document.getElementById("transport-full-address").value,
         availability: document.getElementById("availability").value,
         notes: document.getElementById("transport-notes").value
       };
@@ -1421,10 +1563,17 @@
         return;
       }
       navigator.geolocation.getCurrentPosition(
-        (pos) => {
+        async (pos) => {
           const lat = pos.coords.latitude.toFixed(6);
           const lng = pos.coords.longitude.toFixed(6);
           document.getElementById("affected-gps").value = lat + ", " + lng;
+          
+          // Reverse geocode to get location details
+          try {
+            await reverseGeocode(lat, lng, 'affected');
+          } catch (error) {
+            console.error('Failed to get location details:', error);
+          }
         },
         (err) => {
           alert("Unable to get location: " + err.message);
@@ -1460,6 +1609,10 @@
         phone2: document.getElementById("affected-phone2").value,
         district: document.getElementById("affected-district").value,
         gps: document.getElementById("affected-gps").value,
+        dsDivision: document.getElementById("affected-ds-division").value,
+        gnDivision: document.getElementById("affected-gn-division").value,
+        roadName: document.getElementById("affected-road-name").value,
+        fullAddress: document.getElementById("affected-full-address").value,
         peopleCount: document.getElementById("people-count").value,
         needs: needsString,
         notes: document.getElementById("affected-notes").value
