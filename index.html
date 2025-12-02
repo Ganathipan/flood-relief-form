@@ -3,8 +3,7 @@
 <head>
   <title>Flood Relief Management System</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- Google Maps API for Reverse Geocoding -->
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBhYourAPIKeyHere&libraries=places"></script>
+  <!-- Using FREE Nominatim API (OpenStreetMap) - No API key required! -->
   <style>
     * {
       box-sizing: border-box;
@@ -1315,76 +1314,73 @@
       tbody.appendChild(row);
     }
 
-    // Reverse Geocoding Function
+    // Reverse Geocoding Function using FREE Nominatim API (OpenStreetMap)
+    // No API key required! Completely free!
     async function reverseGeocode(lat, lng, prefix) {
       try {
-        const geocoder = new google.maps.Geocoder();
-        const latlng = { lat: parseFloat(lat), lng: parseFloat(lng) };
+        // Nominatim API endpoint (OpenStreetMap) - FREE!
+        const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1&accept-language=en`;
         
-        return new Promise((resolve, reject) => {
-          geocoder.geocode({ location: latlng }, (results, status) => {
-            if (status === 'OK' && results[0]) {
-              const addressComponents = results[0].address_components;
-              const formattedAddress = results[0].formatted_address;
-              
-              let district = '';
-              let dsDiv = '';
-              let gnDiv = '';
-              let road = '';
-              
-              // Parse address components
-              addressComponents.forEach(component => {
-                const types = component.types;
-                
-                // District (administrative_area_level_2)
-                if (types.includes('administrative_area_level_2')) {
-                  district = component.long_name;
-                }
-                
-                // DS Division (administrative_area_level_3)
-                if (types.includes('administrative_area_level_3')) {
-                  dsDiv = component.long_name;
-                }
-                
-                // GN Division (administrative_area_level_4 or locality)
-                if (types.includes('administrative_area_level_4') || types.includes('locality')) {
-                  gnDiv = component.long_name;
-                }
-                
-                // Road name
-                if (types.includes('route')) {
-                  road = component.long_name;
-                }
-              });
-              
-              // Populate hidden fields
-              const prefixStr = prefix ? prefix + '-' : '';
-              document.getElementById(prefixStr + 'ds-division').value = dsDiv;
-              document.getElementById(prefixStr + 'gn-division').value = gnDiv;
-              document.getElementById(prefixStr + 'road-name').value = road;
-              document.getElementById(prefixStr + 'full-address').value = formattedAddress;
-              
-              // Show location details
-              const detailsDiv = document.getElementById(prefixStr + 'location-details');
-              const addressP = document.getElementById(prefixStr + 'detected-address');
-              
-              if (detailsDiv && addressP) {
-                addressP.innerHTML = `
-                  <strong>District:</strong> ${district || 'Not detected'}<br>
-                  <strong>DS Division:</strong> ${dsDiv || 'Not detected'}<br>
-                  <strong>GN Division:</strong> ${gnDiv || 'Not detected'}<br>
-                  <strong>Road:</strong> ${road || 'Not detected'}<br>
-                  <strong>Full Address:</strong> ${formattedAddress}
-                `;
-                detailsDiv.style.display = 'block';
-              }
-              
-              resolve({ district, dsDiv, gnDiv, road, formattedAddress });
-            } else {
-              reject(new Error('Geocoding failed: ' + status));
-            }
-          });
+        // Add delay to respect Nominatim's 1 req/second rate limit
+        if (window.lastNominatimCall) {
+          const timeSinceLastCall = Date.now() - window.lastNominatimCall;
+          if (timeSinceLastCall < 1000) {
+            await new Promise(resolve => setTimeout(resolve, 1000 - timeSinceLastCall));
+          }
+        }
+        window.lastNominatimCall = Date.now();
+        
+        const response = await fetch(url, {
+          headers: {
+            'User-Agent': 'FloodReliefApp/1.0' // Required by Nominatim
+          }
         });
+        
+        if (!response.ok) {
+          throw new Error('Geocoding request failed');
+        }
+        
+        const data = await response.json();
+        
+        if (data && data.address) {
+          const addr = data.address;
+          const formattedAddress = data.display_name;
+          
+          // Extract location components from Nominatim response
+          let district = addr.county || addr.state_district || '';
+          let dsDiv = addr.state_district || addr.suburb || '';
+          let gnDiv = addr.suburb || addr.village || addr.town || addr.neighbourhood || '';
+          let road = addr.road || addr.street || '';
+          
+          // Clean up district name (remove "District" suffix if present)
+          district = district.replace(' District', '').trim();
+          
+          // Populate hidden fields
+          const prefixStr = prefix ? prefix + '-' : '';
+          document.getElementById(prefixStr + 'ds-division').value = dsDiv;
+          document.getElementById(prefixStr + 'gn-division').value = gnDiv;
+          document.getElementById(prefixStr + 'road-name').value = road;
+          document.getElementById(prefixStr + 'full-address').value = formattedAddress;
+          
+          // Show location details
+          const detailsDiv = document.getElementById(prefixStr + 'location-details');
+          const addressP = document.getElementById(prefixStr + 'detected-address');
+          
+          if (detailsDiv && addressP) {
+            addressP.innerHTML = `
+              <strong>District:</strong> ${district || 'Not detected'}<br>
+              <strong>DS Division:</strong> ${dsDiv || 'Not detected'}<br>
+              <strong>GN Division:</strong> ${gnDiv || 'Not detected'}<br>
+              <strong>Road:</strong> ${road || 'Not detected'}<br>
+              <strong>Full Address:</strong> ${formattedAddress}
+            `;
+            detailsDiv.style.display = 'block';
+          }
+          
+          return { district, dsDiv, gnDiv, road, formattedAddress };
+        } else {
+          throw new Error('No address data received');
+        }
       } catch (error) {
         console.error('Reverse geocoding error:', error);
         alert('Unable to detect location details. Please try again.');
