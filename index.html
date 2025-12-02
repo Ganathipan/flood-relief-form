@@ -433,6 +433,13 @@
       <button class="tab-button" id="transport-tab" onclick="switchDonationType('transport')" style="margin: 5px;">🚚 Transport Supporter</button>
     </div>
 
+    <!-- DONOR SECTION -->
+    <div id="donor-section" style="display: none;">
+      <div style="text-align: center; margin-bottom: 20px;">
+        <button class="tab-button" id="donor-register-tab" onclick="switchDonorView('register')" style="margin: 5px;">📝 Register Donation</button>
+        <button class="tab-button" id="donor-browse-tab" onclick="switchDonorView('browse')" style="margin: 5px;">👁️ Browse Needs</button>
+      </div>
+
     <!-- DONOR FORM -->
     <div id="donor-form" class="page-content active">
     <h3 style="text-align: center; margin-top: 0;">Donor Registration Form</h3>
@@ -554,6 +561,49 @@
         <button type="button" onclick="loadNeeds()">🔄 Refresh</button>
       </div>
       <div id="needs-list" class="needs-list">
+        <div class="loading">Loading needs data...</div>
+      </div>
+    </div>
+  </div>
+
+    <!-- DONOR BROWSE NEEDS SECTION -->
+    <div id="donor-browse" class="page-content" style="display: none;">
+      <h3 style="text-align: center; margin-top: 0;">🆘 Browse People Who Need Help</h3>
+      <p style="text-align: center; color: #666;">Find people in need and contact them directly to coordinate help</p>
+      
+      <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+        <label>Filter by District</label>
+        <select id="donor-browse-district" onchange="filterNeedsForDonor()">
+          <option value="">All Districts</option>
+          <option>Ampara</option>
+          <option>Anuradhapura</option>
+          <option>Badulla</option>
+          <option>Batticaloa</option>
+          <option>Colombo</option>
+          <option>Galle</option>
+          <option>Gampaha</option>
+          <option>Hambantota</option>
+          <option>Jaffna</option>
+          <option>Kalutara</option>
+          <option>Kandy</option>
+          <option>Kegalle</option>
+          <option>Kilinochchi</option>
+          <option>Kurunegala</option>
+          <option>Mannar</option>
+          <option>Matale</option>
+          <option>Matara</option>
+          <option>Monaragala</option>
+          <option>Mullaitivu</option>
+          <option>Nuwara Eliya</option>
+          <option>Polonnaruwa</option>
+          <option>Puttalam</option>
+          <option>Ratnapura</option>
+          <option>Trincomalee</option>
+          <option>Vavuniya</option>
+        </select>
+        <button type="button" onclick="loadNeedsForDonor()">🔄 Refresh</button>
+      </div>
+      <div id="donor-browse-list" class="needs-list">
         <div class="loading">Loading needs data...</div>
       </div>
     </div>
@@ -784,6 +834,13 @@
 
   <!-- AFFECTED PEOPLE PAGE -->
   <div id="affected-page" class="page-content">
+    <div style="text-align: center; margin-bottom: 20px;">
+      <button class="tab-button" id="affected-register-tab" onclick="switchAffectedView('register')" style="margin: 5px;">📝 Register Need</button>
+      <button class="tab-button" id="affected-browse-tab" onclick="switchAffectedView('browse')" style="margin: 5px;">👁️ Browse Donations</button>
+    </div>
+
+    <!-- AFFECTED REGISTRATION FORM -->
+    <div id="affected-register" class="page-content active">
     <h3 style="text-align: center; margin-top: 0;">Affected People Registration</h3>
 
     <label>Name</label>
@@ -867,6 +924,49 @@
     <textarea id="affected-notes"></textarea>
 
     <button class="full-width-submit" onclick="submitAffectedForm()">Submit</button>
+    </div>
+
+    <!-- AFFECTED BROWSE DONATIONS SECTION -->
+    <div id="affected-browse" class="page-content" style="display: none;">
+      <h3 style="text-align: center; margin-top: 0;">🎁 Browse Available Donations</h3>
+      <p style="text-align: center; color: #666;">Find donors and contact them directly to receive help</p>
+      
+      <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+        <label>Filter by District</label>
+        <select id="affected-browse-district" onchange="filterDonorsForAffected()">
+          <option value="">All Districts</option>
+          <option>Ampara</option>
+          <option>Anuradhapura</option>
+          <option>Badulla</option>
+          <option>Batticaloa</option>
+          <option>Colombo</option>
+          <option>Galle</option>
+          <option>Gampaha</option>
+          <option>Hambantota</option>
+          <option>Jaffna</option>
+          <option>Kalutara</option>
+          <option>Kandy</option>
+          <option>Kegalle</option>
+          <option>Kilinochchi</option>
+          <option>Kurunegala</option>
+          <option>Mannar</option>
+          <option>Matale</option>
+          <option>Matara</option>
+          <option>Monaragala</option>
+          <option>Mullaitivu</option>
+          <option>Nuwara Eliya</option>
+          <option>Polonnaruwa</option>
+          <option>Puttalam</option>
+          <option>Ratnapura</option>
+          <option>Trincomalee</option>
+          <option>Vavuniya</option>
+        </select>
+        <button type="button" onclick="loadDonorsForAffected()">🔄 Refresh</button>
+      </div>
+      <div id="affected-browse-list" class="needs-list">
+        <div class="loading">Loading donations data...</div>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -895,16 +995,53 @@
       document.getElementById('donor-tab').classList.remove('active');
       document.getElementById('transport-tab').classList.remove('active');
       
+      // Hide all sections
+      document.getElementById('donor-section').style.display = 'none';
+      document.getElementById('transport-form').style.display = 'none';
+      
       if (type === 'donor') {
         document.getElementById('donor-tab').classList.add('active');
-        document.getElementById('donor-form').style.display = 'block';
-        document.getElementById('transport-form').style.display = 'none';
-        loadNeeds();
+        document.getElementById('donor-section').style.display = 'block';
+        switchDonorView('register');
       } else {
         document.getElementById('transport-tab').classList.add('active');
-        document.getElementById('donor-form').style.display = 'none';
         document.getElementById('transport-form').style.display = 'block';
         loadTransportNeeds();
+      }
+    }
+
+    // Switch between register and browse for donors
+    function switchDonorView(view) {
+      document.getElementById('donor-register-tab').classList.remove('active');
+      document.getElementById('donor-browse-tab').classList.remove('active');
+      
+      if (view === 'register') {
+        document.getElementById('donor-register-tab').classList.add('active');
+        document.getElementById('donor-form').style.display = 'block';
+        document.getElementById('donor-browse').style.display = 'none';
+        loadNeeds();
+      } else {
+        document.getElementById('donor-browse-tab').classList.add('active');
+        document.getElementById('donor-form').style.display = 'none';
+        document.getElementById('donor-browse').style.display = 'block';
+        loadNeedsForDonor();
+      }
+    }
+
+    // Switch between register and browse for affected people
+    function switchAffectedView(view) {
+      document.getElementById('affected-register-tab').classList.remove('active');
+      document.getElementById('affected-browse-tab').classList.remove('active');
+      
+      if (view === 'register') {
+        document.getElementById('affected-register-tab').classList.add('active');
+        document.getElementById('affected-register').style.display = 'block';
+        document.getElementById('affected-browse').style.display = 'none';
+      } else {
+        document.getElementById('affected-browse-tab').classList.add('active');
+        document.getElementById('affected-register').style.display = 'none';
+        document.getElementById('affected-browse').style.display = 'block';
+        loadDonorsForAffected();
       }
     }
 
@@ -982,6 +1119,127 @@
       } else {
         const filtered = allNeedsData.filter(need => need.district === selectedDistrict);
         displayNeeds(filtered);
+      }
+    }
+
+    // Load needs for donor browse section
+    function loadNeedsForDonor() {
+      const needsList = document.getElementById('donor-browse-list');
+      needsList.innerHTML = '<div class="loading">Loading needs data...</div>';
+
+      fetch(scriptURL + '?action=getNeeds')
+        .then(res => res.json())
+        .then(data => {
+          allNeedsData = data;
+          displayNeedsForDonor(allNeedsData);
+        })
+        .catch(err => {
+          needsList.innerHTML = '<div class="loading">Error loading needs data. Please try again.</div>';
+          console.error('Error:', err);
+        });
+    }
+
+    // Display needs with contact buttons for donors
+    function displayNeedsForDonor(needs) {
+      const needsList = document.getElementById('donor-browse-list');
+      
+      if (!needs || needs.length === 0) {
+        needsList.innerHTML = '<div class="loading">No urgent needs reported yet.</div>';
+        return;
+      }
+
+      let html = '';
+      needs.forEach(need => {
+        html += `
+          <div class="need-card">
+            <h5><span class="district-tag">${need.district}</span> ${need.name}</h5>
+            <p><strong>📞 Contact:</strong> <a href="tel:${need.phone}" style="color: #007bff;">${need.phone}</a></p>
+            ${need.phone2 ? `<p><strong>📞 Alt:</strong> <a href="tel:${need.phone2}" style="color: #007bff;">${need.phone2}</a></p>` : ''}
+            <p><strong>👥 People Affected:</strong> ${need.peopleCount}</p>
+            <p class="urgent"><strong>🆘 Urgent Needs:</strong> ${need.needsFormatted}</p>
+            ${need.gps ? `<p><strong>📍 Location:</strong> <a href="https://www.google.com/maps?q=${need.gps}" target="_blank" style="color: #007bff;">${need.gps}</a></p>` : ''}
+            ${need.notes ? `<p><strong>ℹ️ Situation:</strong> ${need.notes}</p>` : ''}
+            <p style="font-size: 12px; color: #999;"><strong>Reported:</strong> ${need.timestamp}</p>
+            <div style="margin-top: 15px;">
+              <a href="tel:${need.phone}" style="display: inline-block; padding: 10px 20px; background: #28a745; color: white; text-decoration: none; border-radius: 5px; margin-right: 10px;">📞 Call Now</a>
+              <a href="sms:${need.phone}" style="display: inline-block; padding: 10px 20px; background: #17a2b8; color: white; text-decoration: none; border-radius: 5px;">💬 Send SMS</a>
+            </div>
+          </div>
+        `;
+      });
+
+      needsList.innerHTML = html;
+    }
+
+    // Filter needs for donor browse
+    function filterNeedsForDonor() {
+      const selectedDistrict = document.getElementById('donor-browse-district').value;
+      
+      if (!selectedDistrict) {
+        displayNeedsForDonor(allNeedsData);
+      } else {
+        const filtered = allNeedsData.filter(need => need.district === selectedDistrict);
+        displayNeedsForDonor(filtered);
+      }
+    }
+
+    // Load donors for affected people browse section
+    function loadDonorsForAffected() {
+      const donorsList = document.getElementById('affected-browse-list');
+      donorsList.innerHTML = '<div class="loading">Loading donations data...</div>';
+
+      fetch(scriptURL + '?action=getDonors')
+        .then(res => res.json())
+        .then(data => {
+          allDonorsData = data;
+          displayDonorsForAffected(allDonorsData);
+        })
+        .catch(err => {
+          donorsList.innerHTML = '<div class="loading">Error loading donations data. Please try again.</div>';
+          console.error('Error:', err);
+        });
+    }
+
+    // Display donors with contact buttons for affected people
+    function displayDonorsForAffected(donors) {
+      const donorsList = document.getElementById('affected-browse-list');
+      
+      if (!donors || donors.length === 0) {
+        donorsList.innerHTML = '<div class="loading">No donations available yet.</div>';
+        return;
+      }
+
+      let html = '';
+      donors.forEach(donor => {
+        html += `
+          <div class="need-card" style="border-left: 4px solid #28a745;">
+            <h5><span class="district-tag" style="background: #28a745;">${donor.district}</span> ${donor.name}</h5>
+            <p><strong>📞 Contact:</strong> <a href="tel:${donor.phone}" style="color: #007bff;">${donor.phone}</a></p>
+            ${donor.phone2 ? `<p><strong>📞 Alt:</strong> <a href="tel:${donor.phone2}" style="color: #007bff;">${donor.phone2}</a></p>` : ''}
+            <p style="color: #28a745;"><strong>🎁 Available Items:</strong> ${donor.donationsFormatted}</p>
+            ${donor.gps ? `<p><strong>📍 Location:</strong> <a href="https://www.google.com/maps?q=${donor.gps}" target="_blank" style="color: #007bff;">${donor.gps}</a></p>` : ''}
+            ${donor.notes ? `<p><strong>ℹ️ Notes:</strong> ${donor.notes}</p>` : ''}
+            <p style="font-size: 12px; color: #999;"><strong>Registered:</strong> ${donor.timestamp}</p>
+            <div style="margin-top: 15px;">
+              <a href="tel:${donor.phone}" style="display: inline-block; padding: 10px 20px; background: #28a745; color: white; text-decoration: none; border-radius: 5px; margin-right: 10px;">📞 Call Donor</a>
+              <a href="sms:${donor.phone}" style="display: inline-block; padding: 10px 20px; background: #17a2b8; color: white; text-decoration: none; border-radius: 5px;">💬 Send SMS</a>
+            </div>
+          </div>
+        `;
+      });
+
+      donorsList.innerHTML = html;
+    }
+
+    // Filter donors for affected people browse
+    function filterDonorsForAffected() {
+      const selectedDistrict = document.getElementById('affected-browse-district').value;
+      
+      if (!selectedDistrict) {
+        displayDonorsForAffected(allDonorsData);
+      } else {
+        const filtered = allDonorsData.filter(donor => donor.district === selectedDistrict);
+        displayDonorsForAffected(filtered);
       }
     }
 
