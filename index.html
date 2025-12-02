@@ -1585,6 +1585,39 @@
       .then(res => res.text())
       .then(text => {
         alert("Server says: " + text);
+        // Clear form after successful submission
+        document.getElementById("name").value = "";
+        document.getElementById("phone").value = "";
+        document.getElementById("phone2").value = "";
+        document.getElementById("district").value = "";
+        document.getElementById("gps").value = "";
+        document.getElementById("ds-division").value = "";
+        document.getElementById("gn-division").value = "";
+        document.getElementById("road-name").value = "";
+        document.getElementById("full-address").value = "";
+        document.getElementById("notes").value = "";
+        // Clear donation table rows except first one
+        const tbody = document.querySelector("#donationTable tbody");
+        tbody.innerHTML = `
+          <tr>
+            <td>
+              <select class="donation-item">
+                <option value="">Select item</option>
+                <option>Food Packs</option>
+                <option>Water Bottles</option>
+                <option>Clothes</option>
+                <option>Medicines</option>
+                <option>Sanitary Items</option>
+                <option>Bedding</option>
+                <option>Shelter</option>
+                <option>Medical Help</option>
+              </select>
+            </td>
+            <td>
+              <input type="number" class="donation-qty" min="1" placeholder="Qty">
+            </td>
+          </tr>
+        `;
       })
       .catch(err => {
         alert("Error: " + err);
@@ -1651,6 +1684,22 @@
       .then(res => res.text())
       .then(text => {
         alert("Server says: " + text);
+        // Clear form after successful submission
+        document.getElementById("transport-name").value = "";
+        document.getElementById("transport-phone").value = "";
+        document.getElementById("transport-phone2").value = "";
+        document.getElementById("transport-home-district").value = "";
+        document.getElementById("vehicle-type").value = "";
+        document.getElementById("vehicle-capacity").value = "";
+        document.getElementById("transport-gps").value = "";
+        document.getElementById("transport-ds-division").value = "";
+        document.getElementById("transport-gn-division").value = "";
+        document.getElementById("transport-road-name").value = "";
+        document.getElementById("transport-full-address").value = "";
+        document.getElementById("availability").value = "";
+        document.getElementById("transport-notes").value = "";
+        // Uncheck all service district checkboxes
+        document.querySelectorAll('input[name="service-district"]:checked').forEach(cb => cb.checked = false);
       })
       .catch(err => {
         alert("Error: " + err);
@@ -1751,6 +1800,40 @@
       .then(res => res.text())
       .then(text => {
         alert("Server says: " + text);
+        // Clear form after successful submission
+        document.getElementById("affected-name").value = "";
+        document.getElementById("affected-phone").value = "";
+        document.getElementById("affected-phone2").value = "";
+        document.getElementById("affected-district").value = "";
+        document.getElementById("affected-gps").value = "";
+        document.getElementById("affected-ds-division").value = "";
+        document.getElementById("affected-gn-division").value = "";
+        document.getElementById("affected-road-name").value = "";
+        document.getElementById("affected-full-address").value = "";
+        document.getElementById("people-count").value = "";
+        document.getElementById("affected-notes").value = "";
+        // Clear needs table rows except first one
+        const tbody = document.querySelector("#needsTable tbody");
+        tbody.innerHTML = `
+          <tr>
+            <td>
+              <select class="need-item">
+                <option value="">Select item</option>
+                <option>Food Packs</option>
+                <option>Water Bottles</option>
+                <option>Clothes</option>
+                <option>Medicines</option>
+                <option>Sanitary Items</option>
+                <option>Bedding</option>
+                <option>Shelter</option>
+                <option>Medical Help</option>
+              </select>
+            </td>
+            <td>
+              <input type="number" class="need-qty" min="1" placeholder="Qty">
+            </td>
+          </tr>
+        `;
       })
       .catch(err => {
         alert("Error: " + err);
