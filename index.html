@@ -60,6 +60,8 @@
   <button onclick="submitForm()">Submit</button>
 
   <script>
+    const scriptURL = "https://script.google.com/macros/s/AKfycbxNrPQojUsPiq6P2jWC1Ea2EtWsyPN-ImOnovUmCZnbpxNgB3m4JH_OE-xQNvOBR1cjoA/exec";
+  
     function submitForm() {
       const data = {
         name: document.getElementById("name").value,
@@ -69,19 +71,20 @@
         quantity: document.getElementById("qty").value,
         notes: document.getElementById("notes").value
       };
-
-      // Change this URL to your Google Apps Script Web App URL
-      const scriptURL = "https://script.google.com/macros/s/AKfycbxNrPQojUsPiq6P2jWC1Ea2EtWsyPN-ImOnovUmCZnbpxNgB3m4JH_OE-xQNvOBR1cjoA/exec";
-
+  
       fetch(scriptURL, {
         method: "POST",
-        mode: "no-cors",
         body: JSON.stringify(data)
+        // while testing, keep NO "no-cors" so we can see the response
+      })
+      .then(res => res.text())
+      .then(text => {
+        alert("Server says: " + text);
+      })
+      .catch(err => {
+        alert("Error: " + err);
       });
-
-      alert("Thank you! Your donation details have been recorded.");
     }
   </script>
-
 </body>
 </html>
