@@ -1,180 +1,507 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Donor Registration - Flood Relief</title>
+  <title>Flood Relief Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-    body { font-family: Arial; padding: 20px; background: #f0f4f7; }
-    h2 { text-align: center; }
-    label { display: block; margin-top: 15px; font-weight: bold; }
-    input, select, textarea {
-      width: 100%; padding: 10px; margin-top: 5px; border-radius: 5px; border: 1px solid #ccc;
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f0f4f7;
+      color: #222;
     }
-    button {
-      padding: 10px 12px; margin-top: 10px;
-      background: #007bff; color: white; border: none; border-radius: 5px;
-      font-size: 14px; cursor: pointer;
+    .wrapper {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 16px;
     }
-    button:hover { background: #0056b3; }
+    h1, h2 {
+      margin: 12px 0;
+      text-align: center;
+    }
 
-    /* Table-style donations */
-    table {
-      width: 100%; border-collapse: collapse; margin-top: 8px;
+    /* Navbar (navigation) */
+    .navbar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 4px;
+      background: #003b73;
+      padding: 8px;
+    }
+    .nav-btn {
+      flex: 1 1 auto;
+      border: none;
+      background: transparent;
+      color: #ffffff;
+      padding: 8px 4px;
+      font-size: 14px;
+      cursor: pointer;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+    .nav-btn:hover {
+      background: #225b94;
+    }
+    .nav-btn.active {
+      background: #ffd54a;
+      color: #000000;
+      font-weight: bold;
+    }
+
+    /* Page sections */
+    .page {
+      display: none;
+      margin-top: 16px;
+    }
+    .page.active {
+      display: block;
+    }
+
+    /* Form styles (submit/register page) */
+    label {
+      display: block;
+      margin-top: 12px;
+      font-weight: bold;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 4px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+      font-size: 14px;
+    }
+    textarea {
+      min-height: 70px;
+      resize: vertical;
+    }
+    .btn-primary {
+      width: 100%;
+      padding: 10px;
+      margin-top: 16px;
+      background: #007bff;
+      color: #ffffff;
+      border: none;
+      border-radius: 4px;
+      font-size: 15px;
+      cursor: pointer;
+    }
+    .btn-primary:hover {
+      background: #0056b3;
+    }
+
+    /* Tables for data pages */
+    .info-line {
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+    .status-text {
+      font-size: 13px;
+      margin: 4px 0;
+    }
+    .status-error {
+      color: #b00020;
+    }
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
       background: #ffffff;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 480px;
     }
     th, td {
-      border: 1px solid #ccc; padding: 6px;
+      border: 1px solid #ccc;
+      padding: 6px 8px;
+      font-size: 13px;
+      text-align: left;
     }
-    th { background: #e6edf5; text-align: left; }
-    .full-width-submit {
-      width: 100%; margin-top: 20px; font-size: 16px;
+    th {
+      background: #e6edf5;
+      font-weight: bold;
+    }
+
+    .small-text {
+      font-size: 12px;
+      color: #555;
+      margin-top: 4px;
     }
   </style>
 </head>
 
 <body>
-  <h2>Donor Registration Form</h2>
+  <div class="navbar">
+    <button class="nav-btn active" data-page="submit" onclick="showPage('submit')">Submit / Register</button>
+    <button class="nav-btn" data-page="volunteers" onclick="showPage('volunteers')">Volunteers</button>
+    <button class="nav-btn" data-page="stock" onclick="showPage('stock')">Available Stock</button>
+    <button class="nav-btn" data-page="needs" onclick="showPage('needs')">Relief Needs</button>
+    <button class="nav-btn" data-page="admin" onclick="showPage('admin')">Admin</button>
+  </div>
 
-  <!-- Basic info -->
-  <label>Name</label>
-  <input type="text" id="name" required>
+  <div class="wrapper">
+    <!-- Submit / Register page -->
+    <div id="page-submit" class="page active">
+      <h2>Donor Registration Form</h2>
 
-  <label>Phone Number</label>
-  <input type="text" id="phone" required>
+      <!-- Basic info -->
+      <label for="name">Name</label>
+      <input type="text" id="name" required>
 
-  <label>District</label>
-  <select id="district">
-    <option value="">Select District</option>
-    <option>Colombo</option>
-    <option>Gampaha</option>
-    <option>Kandy</option>
-    <option>Jaffna</option>
-    <option>Batticaloa</option>
-    <option>Kurunegala</option>
-    <option>Anuradhapura</option>
-    <!-- Add all 25 districts if you like -->
-  </select>
+      <label for="phone">Phone Number</label>
+      <input type="text" id="phone" required>
 
-  <!-- GPS location -->
-  <label>Your GPS Location</label>
-  <input type="text" id="gps" readonly placeholder="Click 'Get My Location'">
-  <button type="button" onclick="getLocation()">Get My Location</button>
+      <label for="district">District</label>
+      <select id="district">
+        <option value="">Select District</option>
+        <option>Colombo</option>
+        <option>Gampaha</option>
+        <option>Kandy</option>
+        <option>Jaffna</option>
+        <option>Batticaloa</option>
+        <option>Kurunegala</option>
+        <option>Anuradhapura</option>
+      </select>
 
-  <!-- Donation table -->
-  <label>Donations (item + quantity)</label>
-  <table id="donationTable">
-    <thead>
-      <tr>
-        <th>Item</th>
-        <th>Quantity</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- first row -->
-      <tr>
-        <td>
-          <select class="donation-item">
-            <option value="">Select item</option>
-            <option>Food Packs</option>
-            <option>Water Bottles</option>
-            <option>Clothes</option>
-            <option>Medicines</option>
-            <option>Sanitary Items</option>
-            <option>Bedding</option>
-          </select>
-        </td>
-        <td>
-          <input type="number" class="donation-qty" min="1" placeholder="Qty">
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <button type="button" onclick="addDonationRow()">+ Add another item</button>
+      <label for="donation">Donation Type</label>
+      <select id="donation">
+        <option>Food Packs</option>
+        <option>Water Bottles</option>
+        <option>Clothes</option>
+        <option>Medicines</option>
+        <option>Sanitary Items</option>
+        <option>Bedding</option>
+      </select>
 
-  <label>Additional Notes (Optional)</label>
-  <textarea id="notes"></textarea>
+      <label for="qty">Quantity</label>
+      <input type="number" id="qty" min="1" required>
 
-  <button class="full-width-submit" onclick="submitForm()">Submit</button>
+      <label for="notes">Additional Notes (Optional)</label>
+      <textarea id="notes"></textarea>
+
+      <button class="btn-primary" onclick="submitForm()">Submit</button>
+    </div>
+
+    <!-- Volunteers page -->
+    <div id="page-volunteers" class="page">
+      <h2>Volunteers</h2>
+      <div class="info-line">Auto-refreshing every 60 seconds.</div>
+      <div id="volunteers-status" class="status-text"></div>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Phone</th>
+              <th>District</th>
+              <th>Skills / Notes</th>
+            </tr>
+          </thead>
+          <tbody id="volunteers-body">
+          </tbody>
+        </table>
+      </div>
+      <div id="volunteers-updated" class="small-text"></div>
+    </div>
+
+    <!-- Available Stock page -->
+    <div id="page-stock" class="page">
+      <h2>Available Stock</h2>
+      <div class="info-line">Auto-refreshing every 60 seconds.</div>
+      <div id="stock-status" class="status-text"></div>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Quantity</th>
+              <th>Location</th>
+              <th>Last Updated</th>
+            </tr>
+          </thead>
+          <tbody id="stock-body">
+          </tbody>
+        </table>
+      </div>
+      <div id="stock-updated" class="small-text"></div>
+    </div>
+
+    <!-- Relief Needs page -->
+    <div id="page-needs" class="page">
+      <h2>Relief Needs</h2>
+      <div class="info-line">Auto-refreshing every 60 seconds.</div>
+      <div id="needs-status" class="status-text"></div>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Quantity</th>
+              <th>District</th>
+              <th>Priority</th>
+              <th>Contact</th>
+            </tr>
+          </thead>
+          <tbody id="needs-body">
+          </tbody>
+        </table>
+      </div>
+      <div id="needs-updated" class="small-text"></div>
+    </div>
+
+    <!-- Admin page -->
+    <div id="page-admin" class="page">
+      <h2>Admin Overview</h2>
+      <div class="info-line">Auto-refreshing every 60 seconds.</div>
+      <div id="admin-status" class="status-text"></div>
+
+      <div id="admin-summary" class="small-text"></div>
+
+      <div class="table-container" style="margin-top:8px;">
+        <table>
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody id="admin-body">
+          </tbody>
+        </table>
+      </div>
+      <div id="admin-updated" class="small-text"></div>
+    </div>
+  </div>
 
   <script>
-    const scriptURL = "https://script.google.com/macros/s/AKfycbxNrPQojUsPiq6P2jWC1Ea2EtWsyPN-ImOnovUmCZnbpxNgB3m4JH_OE-xQNvOBR1cjoA/exec";
+    // --- Google Apps Script endpoints ---
+    const DONOR_POST_URL = "https://script.google.com/macros/s/AKfycbxNrPQojUsPiq6P2jWC1Ea2EtWsyPN-ImOnovUmCZnbpxNgB3m4JH_OE-xQNvOBR1cjoA/exec";
+    const VOLUNTEERS_URL = "https://script.google.com/macros/s/AKfycbxNrPQojUsPiq6P2jWC1Ea2EtWsyPN-ImOnovUmCZnbpxNgB3m4JH_OE-xQNvOBR1cjoA/exec?type=volunteers";
+    const STOCK_URL      = "https://script.google.com/macros/s/AKfycbxNrPQojUsPiq6P2jWC1Ea2EtWsyPN-ImOnovUmCZnbpxNgB3m4JH_OE-xQNvOBR1cjoA/exec?type=stock";
+    const NEEDS_URL      = "https://script.google.com/macros/s/AKfycbxNrPQojUsPiq6P2jWC1Ea2EtWsyPN-ImOnovUmCZnbpxNgB3m4JH_OE-xQNvOBR1cjoA/exec?type=needs";
+    const ADMIN_URL      = "https://script.google.com/macros/s/AKfycbxNrPQojUsPiq6P2jWC1Ea2EtWsyPN-ImOnovUmCZnbpxNgB3m4JH_OE-xQNvOBR1cjoA/exec?type=admin";
 
-    // Add new row to donation table
-    function addDonationRow() {
-      const tbody = document.querySelector("#donationTable tbody");
-      const row = document.createElement("tr");
+    // Track if pages have been loaded once (for first-show behaviour)
+    const pageLoaded = {
+      volunteers: false,
+      stock: false,
+      needs: false,
+      admin: false
+    };
 
-      row.innerHTML = `
-        <td>
-          <select class="donation-item">
-            <option value="">Select item</option>
-            <option>Food Packs</option>
-            <option>Water Bottles</option>
-            <option>Clothes</option>
-            <option>Medicines</option>
-            <option>Sanitary Items</option>
-            <option>Bedding</option>
-          </select>
-        </td>
-        <td>
-          <input type="number" class="donation-qty" min="1" placeholder="Qty">
-        </td>
-      `;
-      tbody.appendChild(row);
-    }
+    // --- Navigation between pages ---
+    function showPage(page) {
+      // toggle visible section
+      const pages = document.querySelectorAll('.page');
+      pages.forEach(p => p.classList.remove('active'));
+      const activePage = document.getElementById('page-' + page);
+      if (activePage) activePage.classList.add('active');
 
-    // Get GPS coordinates
-    function getLocation() {
-      if (!navigator.geolocation) {
-        alert("Geolocation is not supported on this device.");
-        return;
-      }
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          const lat = pos.coords.latitude.toFixed(6);
-          const lng = pos.coords.longitude.toFixed(6);
-          document.getElementById("gps").value = lat + ", " + lng;
-        },
-        (err) => {
-          alert("Unable to get location: " + err.message);
-        }
-      );
-    }
-
-    function submitForm() {
-      // Collect donation rows
-      const rows = document.querySelectorAll("#donationTable tbody tr");
-      const donations = [];
-
-      rows.forEach(row => {
-        const item = row.querySelector(".donation-item").value;
-        const qty  = row.querySelector(".donation-qty").value;
-        if (item && qty) {
-          donations.push(item + " x " + qty);
+      // toggle navbar active state
+      const navBtns = document.querySelectorAll('.nav-btn');
+      navBtns.forEach(btn => {
+        if (btn.getAttribute('data-page') === page) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
         }
       });
 
+      // lazily load data the first time the page is shown
+      if (page === 'volunteers' && !pageLoaded.volunteers) {
+        pageLoaded.volunteers = true;
+        loadVolunteers();
+      } else if (page === 'stock' && !pageLoaded.stock) {
+        pageLoaded.stock = true;
+        loadStock();
+      } else if (page === 'needs' && !pageLoaded.needs) {
+        pageLoaded.needs = true;
+        loadNeeds();
+      } else if (page === 'admin' && !pageLoaded.admin) {
+        pageLoaded.admin = true;
+        loadAdmin();
+      }
+    }
+
+    // --- Donor form submission ---
+    function submitForm() {
       const data = {
         name: document.getElementById("name").value,
         phone: document.getElementById("phone").value,
         district: document.getElementById("district").value,
-        donations: donations.join("; "),     // e.g. "Food Packs x 10; Water Bottles x 5"
-        gps: document.getElementById("gps").value,
+        donation: document.getElementById("donation").value,
+        quantity: document.getElementById("qty").value,
         notes: document.getElementById("notes").value
       };
 
-      fetch(scriptURL, {
+      fetch(DONOR_POST_URL, {
         method: "POST",
         body: JSON.stringify(data)
       })
       .then(res => res.text())
       .then(text => {
         alert("Server says: " + text);
+        // simple reset after successful submit
+        document.getElementById("name").value = "";
+        document.getElementById("phone").value = "";
+        document.getElementById("district").value = "";
+        document.getElementById("donation").selectedIndex = 0;
+        document.getElementById("qty").value = "";
+        document.getElementById("notes").value = "";
       })
       .catch(err => {
         alert("Error: " + err);
       });
     }
+
+    // --- Loading tables from Apps Script ---
+    function formatTime(date) {
+      return date.toLocaleString();
+    }
+
+    function loadVolunteers() {
+      const status = document.getElementById("volunteers-status");
+      const tbody = document.getElementById("volunteers-body");
+      const updated = document.getElementById("volunteers-updated");
+      status.textContent = "Loading...";
+      status.classList.remove("status-error");
+
+      fetch(VOLUNTEERS_URL)
+        .then(r => r.json())
+        .then(list => {
+          tbody.innerHTML = "";
+          (list || []).forEach(v => {
+            const tr = document.createElement("tr");
+            tr.innerHTML =
+              "<td>" + (v.name || "") + "</td>" +
+              "<td>" + (v.phone || "") + "</td>" +
+              "<td>" + (v.district || "") + "</td>" +
+              "<td>" + (v.skill || v.notes || "") + "</td>";
+            tbody.appendChild(tr);
+          });
+          status.textContent = list && list.length ? "" : "No data.";
+          updated.textContent = "Last updated: " + formatTime(new Date());
+        })
+        .catch(() => {
+          status.textContent = "Error loading data";
+          status.classList.add("status-error");
+        });
+    }
+
+    function loadStock() {
+      const status = document.getElementById("stock-status");
+      const tbody = document.getElementById("stock-body");
+      const updated = document.getElementById("stock-updated");
+      status.textContent = "Loading...";
+      status.classList.remove("status-error");
+
+      fetch(STOCK_URL)
+        .then(r => r.json())
+        .then(list => {
+          tbody.innerHTML = "";
+          (list || []).forEach(item => {
+            const tr = document.createElement("tr");
+            tr.innerHTML =
+              "<td>" + (item.item || "") + "</td>" +
+              "<td>" + (item.quantity || "") + "</td>" +
+              "<td>" + (item.location || "") + "</td>" +
+              "<td>" + (item.updatedAt || "") + "</td>";
+            tbody.appendChild(tr);
+          });
+          status.textContent = list && list.length ? "" : "No data.";
+          updated.textContent = "Last updated: " + formatTime(new Date());
+        })
+        .catch(() => {
+          status.textContent = "Error loading data";
+          status.classList.add("status-error");
+        });
+    }
+
+    function loadNeeds() {
+      const status = document.getElementById("needs-status");
+      const tbody = document.getElementById("needs-body");
+      const updated = document.getElementById("needs-updated");
+      status.textContent = "Loading...";
+      status.classList.remove("status-error");
+
+      fetch(NEEDS_URL)
+        .then(r => r.json())
+        .then(list => {
+          tbody.innerHTML = "";
+          (list || []).forEach(n => {
+            const tr = document.createElement("tr");
+            tr.innerHTML =
+              "<td>" + (n.item || "") + "</td>" +
+              "<td>" + (n.quantity || "") + "</td>" +
+              "<td>" + (n.district || "") + "</td>" +
+              "<td>" + (n.priority || "") + "</td>" +
+              "<td>" + (n.contact || "") + "</td>";
+            tbody.appendChild(tr);
+          });
+          status.textContent = list && list.length ? "" : "No data.";
+          updated.textContent = "Last updated: " + formatTime(new Date());
+        })
+        .catch(() => {
+          status.textContent = "Error loading data";
+          status.classList.add("status-error");
+        });
+    }
+
+    function loadAdmin() {
+      const status = document.getElementById("admin-status");
+      const tbody = document.getElementById("admin-body");
+      const summary = document.getElementById("admin-summary");
+      const updated = document.getElementById("admin-updated");
+      status.textContent = "Loading...";
+      status.classList.remove("status-error");
+
+      fetch(ADMIN_URL)
+        .then(r => r.json())
+        .then(info => {
+          tbody.innerHTML = "";
+          if (!info) info = {};
+
+          const rows = [
+            ["Total donors", info.totalDonors],
+            ["Total volunteers", info.totalVolunteers],
+            ["Last updated (server)", info.lastUpdated]
+          ];
+          rows.forEach(([label, value]) => {
+            const tr = document.createElement("tr");
+            tr.innerHTML =
+              "<td>" + label + "</td>" +
+              "<td>" + (value != null ? value : "") + "</td>";
+            tbody.appendChild(tr);
+          });
+
+          summary.textContent =
+            "Donors: " + (info.totalDonors || 0) +
+            " | Volunteers: " + (info.totalVolunteers || 0);
+          status.textContent = "";
+          updated.textContent = "Last updated: " + formatTime(new Date());
+        })
+        .catch(() => {
+          status.textContent = "Error loading data";
+          status.classList.add("status-error");
+        });
+    }
+
+    // Set up auto-refresh timers (60 seconds)
+    setInterval(loadVolunteers, 60000);
+    setInterval(loadStock, 60000);
+    setInterval(loadNeeds, 60000);
+    setInterval(loadAdmin, 60000);
+
+    // Optional: you can uncomment this to pre-load data in the background
+    // loadVolunteers();
+    // loadStock();
+    // loadNeeds();
+    // loadAdmin();
   </script>
 </body>
 </html>
