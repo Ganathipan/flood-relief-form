@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Donor Registration - Flood Relief</title>
+  <title>Flood Relief Registration</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body { font-family: Arial; padding: 20px; background: #f0f4f7; }
@@ -17,6 +17,48 @@
     }
     button:hover { background: #0056b3; }
 
+    /* Navigation Tabs */
+    .tabs {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+    .tab-button {
+      padding: 12px 24px;
+      background: #6c757d;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background 0.3s;
+    }
+    .tab-button:hover {
+      background: #5a6268;
+    }
+    .tab-button.active {
+      background: #007bff;
+    }
+    .tab-button.active:hover {
+      background: #0056b3;
+    }
+
+    /* Page Content */
+    .page-content {
+      display: none;
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .page-content.active {
+      display: block;
+    }
+
     /* Table-style donations */
     table {
       width: 100%; border-collapse: collapse; margin-top: 8px;
@@ -29,11 +71,196 @@
     .full-width-submit {
       width: 100%; margin-top: 20px; font-size: 16px;
     }
+
+    /* Needs List View */
+    .needs-section {
+      margin-bottom: 30px;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      border: 2px solid #007bff;
+    }
+    .needs-section h4 {
+      margin-top: 0;
+      color: #007bff;
+    }
+    .filter-section {
+      margin-bottom: 15px;
+    }
+    .filter-section select {
+      width: auto;
+      display: inline-block;
+      margin-right: 10px;
+    }
+    .needs-list {
+      max-height: 400px;
+      overflow-y: auto;
+      background: white;
+      padding: 15px;
+      border-radius: 5px;
+    }
+    .need-card {
+      border: 1px solid #ddd;
+      padding: 12px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      background: #fff;
+    }
+    .need-card h5 {
+      margin: 0 0 8px 0;
+      color: #333;
+      font-size: 16px;
+    }
+    .need-card p {
+      margin: 4px 0;
+      font-size: 14px;
+      color: #666;
+    }
+    .need-card .urgent {
+      color: #dc3545;
+      font-weight: bold;
+    }
+    .need-card .district-tag {
+      display: inline-block;
+      background: #007bff;
+      color: white;
+      padding: 2px 8px;
+      border-radius: 3px;
+      font-size: 12px;
+      margin-right: 5px;
+    }
+    .loading {
+      text-align: center;
+      padding: 20px;
+      color: #666;
+    }
+
+    /* Coordination Page Styles */
+    .coordination-step {
+      background: #f8f9fa;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      border-left: 4px solid #007bff;
+    }
+    .coordination-step h4 {
+      margin-top: 0;
+      color: #007bff;
+    }
+    .selection-card {
+      border: 2px solid #ddd;
+      padding: 15px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      background: #fff;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .selection-card:hover {
+      border-color: #007bff;
+      box-shadow: 0 2px 8px rgba(0,123,255,0.2);
+    }
+    .selection-card.selected {
+      border-color: #28a745;
+      background: #e8f5e9;
+    }
+    .selection-card input[type="radio"] {
+      margin-right: 10px;
+    }
+    .selection-card h5 {
+      margin: 0 0 10px 0;
+      color: #333;
+    }
+    .selection-card p {
+      margin: 5px 0;
+      font-size: 14px;
+    }
+    .step-number {
+      display: inline-block;
+      width: 30px;
+      height: 30px;
+      line-height: 30px;
+      text-align: center;
+      background: #007bff;
+      color: white;
+      border-radius: 50%;
+      margin-right: 10px;
+      font-weight: bold;
+    }
+    .summary-box {
+      background: #e7f3ff;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 20px;
+    }
+    .summary-box h5 {
+      margin-top: 0;
+      color: #007bff;
+    }
+    .btn-secondary {
+      background: #6c757d;
+      margin-right: 10px;
+    }
+    .btn-secondary:hover {
+      background: #5a6268;
+    }
   </style>
 </head>
 
 <body>
-  <h2>Donor Details Form</h2>
+  <h2>Flood Relief Registration System</h2>
+
+  <!-- Navigation Tabs -->
+  <div class="tabs">
+    <button class="tab-button active" onclick="showPage('donor')">Donor</button>
+    <button class="tab-button" onclick="showPage('transport')">Transport</button>
+    <button class="tab-button" onclick="showPage('affected')">Affected People</button>
+    <button class="tab-button" onclick="showPage('coordinate')">Coordinate Delivery</button>
+  </div>
+
+  <!-- DONOR PAGE -->
+  <div id="donor-page" class="page-content active">
+    <h3 style="text-align: center; margin-top: 0;">Donor Registration Form</h3>
+
+    <!-- Needs from Affected People -->
+    <div class="needs-section">
+      <h4>🆘 Current Needs from Affected Areas</h4>
+      <div class="filter-section">
+        <label style="display: inline; margin-right: 10px;">Filter by District:</label>
+        <select id="needs-filter-district" onchange="filterNeeds()">
+          <option value="">All Districts</option>
+          <option>Ampara</option>
+          <option>Anuradhapura</option>
+          <option>Badulla</option>
+          <option>Batticaloa</option>
+          <option>Colombo</option>
+          <option>Galle</option>
+          <option>Gampaha</option>
+          <option>Hambantota</option>
+          <option>Jaffna</option>
+          <option>Kalutara</option>
+          <option>Kandy</option>
+          <option>Kegalle</option>
+          <option>Kilinochchi</option>
+          <option>Kurunegala</option>
+          <option>Mannar</option>
+          <option>Matale</option>
+          <option>Matara</option>
+          <option>Monaragala</option>
+          <option>Mullaitivu</option>
+          <option>Nuwara Eliya</option>
+          <option>Polonnaruwa</option>
+          <option>Puttalam</option>
+          <option>Ratnapura</option>
+          <option>Trincomalee</option>
+          <option>Vavuniya</option>
+        </select>
+        <button type="button" onclick="loadNeeds()">🔄 Refresh</button>
+      </div>
+      <div id="needs-list" class="needs-list">
+        <div class="loading">Loading needs data...</div>
+      </div>
+    </div>
 
   <!-- Basic info -->
   <label>Name</label>
@@ -41,6 +268,9 @@
 
   <label>Phone Number</label>
   <input type="text" id="phone" required>
+
+  <label>Second Phone Number (Optional)</label>
+  <input type="text" id="phone2">
 
   <label>District</label>
   <select id="district">
@@ -112,10 +342,328 @@
   <textarea id="notes"></textarea>
 
   <button class="full-width-submit" onclick="submitForm()">Submit</button>
+  </div>
+
+  <!-- TRANSPORT PAGE -->
+  <div id="transport-page" class="page-content">
+    <h3 style="text-align: center; margin-top: 0;">Transport Provider Registration</h3>
+
+    <label>Name / Organization</label>
+    <input type="text" id="transport-name" required>
+
+    <label>Phone Number</label>
+    <input type="text" id="transport-phone" required>
+
+    <label>Second Phone Number (Optional)</label>
+    <input type="text" id="transport-phone2">
+
+    <label>District</label>
+    <select id="transport-district">
+      <option value="">Select District</option>
+      <option>Ampara</option>
+      <option>Anuradhapura</option>
+      <option>Badulla</option>
+      <option>Batticaloa</option>
+      <option>Colombo</option>
+      <option>Galle</option>
+      <option>Gampaha</option>
+      <option>Hambantota</option>
+      <option>Jaffna</option>
+      <option>Kalutara</option>
+      <option>Kandy</option>
+      <option>Kegalle</option>
+      <option>Kilinochchi</option>
+      <option>Kurunegala</option>
+      <option>Mannar</option>
+      <option>Matale</option>
+      <option>Matara</option>
+      <option>Monaragala</option>
+      <option>Mullaitivu</option>
+      <option>Nuwara Eliya</option>
+      <option>Polonnaruwa</option>
+      <option>Puttalam</option>
+      <option>Ratnapura</option>
+      <option>Trincomalee</option>
+      <option>Vavuniya</option>
+    </select>
+
+    <label>Vehicle Type</label>
+    <select id="vehicle-type">
+      <option value="">Select Vehicle Type</option>
+      <option>Van</option>
+      <option>Truck</option>
+      <option>Lorry</option>
+      <option>Three-Wheeler</option>
+      <option>Car</option>
+      <option>Boat</option>
+      <option>Other</option>
+    </select>
+
+    <label>Vehicle Capacity (kg or number of people)</label>
+    <input type="text" id="vehicle-capacity">
+
+    <label>Your GPS Location</label>
+    <input type="text" id="transport-gps" readonly placeholder="Click 'Get My Location'">
+    <button type="button" onclick="getLocationTransport()">Get My Location</button>
+
+    <label>Availability</label>
+    <select id="availability">
+      <option value="">Select Availability</option>
+      <option>Available Now</option>
+      <option>Available Today</option>
+      <option>Available This Week</option>
+      <option>On Request</option>
+    </select>
+
+    <label>Additional Notes (Optional)</label>
+    <textarea id="transport-notes"></textarea>
+
+    <button class="full-width-submit" onclick="submitTransportForm()">Submit</button>
+  </div>
+
+  <!-- AFFECTED PEOPLE PAGE -->
+  <div id="affected-page" class="page-content">
+    <h3 style="text-align: center; margin-top: 0;">Affected People Registration</h3>
+
+    <label>Name</label>
+    <input type="text" id="affected-name" required>
+
+    <label>Phone Number</label>
+    <input type="text" id="affected-phone" required>
+
+    <label>Second Phone Number (Optional)</label>
+    <input type="text" id="affected-phone2">
+
+    <label>District</label>
+    <select id="affected-district">
+      <option value="">Select District</option>
+      <option>Ampara</option>
+      <option>Anuradhapura</option>
+      <option>Badulla</option>
+      <option>Batticaloa</option>
+      <option>Colombo</option>
+      <option>Galle</option>
+      <option>Gampaha</option>
+      <option>Hambantota</option>
+      <option>Jaffna</option>
+      <option>Kalutara</option>
+      <option>Kandy</option>
+      <option>Kegalle</option>
+      <option>Kilinochchi</option>
+      <option>Kurunegala</option>
+      <option>Mannar</option>
+      <option>Matale</option>
+      <option>Matara</option>
+      <option>Monaragala</option>
+      <option>Mullaitivu</option>
+      <option>Nuwara Eliya</option>
+      <option>Polonnaruwa</option>
+      <option>Puttalam</option>
+      <option>Ratnapura</option>
+      <option>Trincomalee</option>
+      <option>Vavuniya</option>
+    </select>
+
+    <label>Your GPS Location</label>
+    <input type="text" id="affected-gps" readonly placeholder="Click 'Get My Location'">
+    <button type="button" onclick="getLocationAffected()">Get My Location</button>
+
+    <label>Number of People Affected</label>
+    <input type="number" id="people-count" min="1" required>
+
+    <label>Urgent Needs (item + quantity)</label>
+    <table id="needsTable">
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Quantity</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <select class="need-item">
+              <option value="">Select item</option>
+              <option>Food Packs</option>
+              <option>Water Bottles</option>
+              <option>Clothes</option>
+              <option>Medicines</option>
+              <option>Sanitary Items</option>
+              <option>Bedding</option>
+              <option>Shelter</option>
+              <option>Medical Help</option>
+            </select>
+          </td>
+          <td>
+            <input type="number" class="need-qty" min="1" placeholder="Qty">
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <button type="button" onclick="addNeedRow()">+ Add another item</button>
+
+    <label>Current Situation / Additional Information</label>
+    <textarea id="affected-notes"></textarea>
+
+    <button class="full-width-submit" onclick="submitAffectedForm()">Submit</button>
+  </div>
+
+  <!-- COORDINATE DELIVERY PAGE -->
+  <div id="coordinate-page" class="page-content">
+    <h3 style="text-align: center; margin-top: 0;">🚚 Coordinate Relief Delivery</h3>
+    <p style="text-align: center; color: #666;">Match donors with transport providers to deliver relief to affected areas</p>
+
+    <!-- Step 1: Select District -->
+    <div class="coordination-step" id="step1">
+      <h4><span class="step-number">1</span>Select District</h4>
+      <label>Choose the district to coordinate relief:</label>
+      <select id="coord-district" onchange="loadDistrictData()">
+        <option value="">Select District</option>
+        <option>Ampara</option>
+        <option>Anuradhapura</option>
+        <option>Badulla</option>
+        <option>Batticaloa</option>
+        <option>Colombo</option>
+        <option>Galle</option>
+        <option>Gampaha</option>
+        <option>Hambantota</option>
+        <option>Jaffna</option>
+        <option>Kalutara</option>
+        <option>Kandy</option>
+        <option>Kegalle</option>
+        <option>Kilinochchi</option>
+        <option>Kurunegala</option>
+        <option>Mannar</option>
+        <option>Matale</option>
+        <option>Matara</option>
+        <option>Monaragala</option>
+        <option>Mullaitivu</option>
+        <option>Nuwara Eliya</option>
+        <option>Polonnaruwa</option>
+        <option>Puttalam</option>
+        <option>Ratnapura</option>
+        <option>Trincomalee</option>
+        <option>Vavuniya</option>
+      </select>
+    </div>
+
+    <!-- Step 2: Select Affected Person -->
+    <div class="coordination-step" id="step2" style="display: none;">
+      <h4><span class="step-number">2</span>Select Affected Person (Highest Need)</h4>
+      <div id="affected-list">
+        <div class="loading">Please select a district first</div>
+      </div>
+    </div>
+
+    <!-- Step 3: Select Donor -->
+    <div class="coordination-step" id="step3" style="display: none;">
+      <h4><span class="step-number">3</span>Select Donor</h4>
+      <div id="donor-list">
+        <div class="loading">Please complete step 2</div>
+      </div>
+    </div>
+
+    <!-- Step 4: Select Transport Provider -->
+    <div class="coordination-step" id="step4" style="display: none;">
+      <h4><span class="step-number">4</span>Select Transport Provider</h4>
+      <div id="transport-list">
+        <div class="loading">Please complete step 3</div>
+      </div>
+    </div>
+
+    <!-- Summary and Submit -->
+    <div class="summary-box" id="summary-box" style="display: none;">
+      <h5>📋 Delivery Coordination Summary</h5>
+      <div id="coordination-summary"></div>
+      <button class="full-width-submit" onclick="submitCoordination()">✅ Confirm & Send SMS Notification</button>
+      <button class="btn-secondary" onclick="resetCoordination()">🔄 Start Over</button>
+    </div>
+  </div>
 
   <script>
     const scriptURL = "https://script.google.com/macros/s/AKfycbxNrPQojUsPiq6P2jWC1Ea2EtWsyPN-ImOnovUmCZnbpxNgB3m4JH_OE-xQNvOBR1cjoA/exec";
-  
+
+    let allNeedsData = [];
+
+    // Page Navigation
+    function showPage(page) {
+      // Hide all pages
+      document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+
+      // Show selected page
+      document.getElementById(page + '-page').classList.add('active');
+      event.target.classList.add('active');
+
+      // Load needs when donor page is shown
+      if (page === 'donor') {
+        loadNeeds();
+      }
+    }
+
+    // Load needs from affected people
+    function loadNeeds() {
+      const needsList = document.getElementById('needs-list');
+      needsList.innerHTML = '<div class="loading">Loading needs data...</div>';
+
+      fetch(scriptURL + '?action=getNeeds')
+        .then(res => res.json())
+        .then(data => {
+          allNeedsData = data;
+          displayNeeds(allNeedsData);
+        })
+        .catch(err => {
+          needsList.innerHTML = '<div class="loading">Error loading needs data. Please try again.</div>';
+          console.error('Error:', err);
+        });
+    }
+
+    // Display needs in the list
+    function displayNeeds(needs) {
+      const needsList = document.getElementById('needs-list');
+      
+      if (!needs || needs.length === 0) {
+        needsList.innerHTML = '<div class="loading">No urgent needs reported yet.</div>';
+        return;
+      }
+
+      let html = '';
+      needs.forEach(need => {
+        html += `
+          <div class="need-card">
+            <h5><span class="district-tag">${need.district}</span> ${need.name}</h5>
+            <p><strong>📞 Contact:</strong> ${need.phone}</p>
+            ${need.phone2 ? `<p><strong>📞 Alt:</strong> ${need.phone2}</p>` : ''}
+            <p><strong>👥 People Affected:</strong> ${need.peopleCount}</p>
+            <p class="urgent"><strong>🆘 Urgent Needs:</strong> ${need.needsFormatted}</p>
+            ${need.gps ? `<p><strong>📍 Location:</strong> ${need.gps}</p>` : ''}
+            ${need.notes ? `<p><strong>ℹ️ Situation:</strong> ${need.notes}</p>` : ''}
+            <p style="font-size: 12px; color: #999;"><strong>Reported:</strong> ${need.timestamp}</p>
+          </div>
+        `;
+      });
+
+      needsList.innerHTML = html;
+    }
+
+    // Filter needs by district
+    function filterNeeds() {
+      const selectedDistrict = document.getElementById('needs-filter-district').value;
+      
+      if (!selectedDistrict) {
+        displayNeeds(allNeedsData);
+      } else {
+        const filtered = allNeedsData.filter(need => need.district === selectedDistrict);
+        displayNeeds(filtered);
+      }
+    }
+
+    // Load needs when page loads
+    window.addEventListener('DOMContentLoaded', function() {
+      loadNeeds();
+    });
+
+    // DONOR Functions
     function addDonationRow() {
       const tbody = document.querySelector("#donationTable tbody");
       const row = document.createElement("tr");
@@ -157,7 +705,6 @@
     }
   
     function submitForm() {
-      // collect donation rows
       const rows = document.querySelectorAll("#donationTable tbody tr");
       const donationsArray = [];
   
@@ -166,9 +713,7 @@
         const qty  = row.querySelector(".donation-qty").value;
   
         if (item && qty) {
-          // remove spaces in item name: "Food Packs" -> "FoodPacks"
           const itemNoSpace = item.replace(/\s+/g, "");
-          // push in format ItemWithoutSpace_qty;
           donationsArray.push(itemNoSpace + "_" + qty + ";");
         }
       });
@@ -178,14 +723,15 @@
         return;
       }
   
-      // join into one string: FoodPacks_10;WaterBottles_5;
       const donationsString = donationsArray.join("");
   
       const data = {
+        type: "donor",
         name: document.getElementById("name").value,
         phone: document.getElementById("phone").value,
+        phone2: document.getElementById("phone2").value,
         district: document.getElementById("district").value,
-        donations: donationsString,                 // 👈 "ItemNoSpace_qty;ItemNoSpace_qty;"
+        donations: donationsString,
         gps: document.getElementById("gps").value,
         notes: document.getElementById("notes").value
       };
@@ -201,6 +747,350 @@
       .catch(err => {
         alert("Error: " + err);
       });
+    }
+
+    // TRANSPORT Functions
+    function getLocationTransport() {
+      if (!navigator.geolocation) {
+        alert("Geolocation is not supported on this device.");
+        return;
+      }
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const lat = pos.coords.latitude.toFixed(6);
+          const lng = pos.coords.longitude.toFixed(6);
+          document.getElementById("transport-gps").value = lat + ", " + lng;
+        },
+        (err) => {
+          alert("Unable to get location: " + err.message);
+        }
+      );
+    }
+
+    function submitTransportForm() {
+      const data = {
+        type: "transport",
+        name: document.getElementById("transport-name").value,
+        phone: document.getElementById("transport-phone").value,
+        phone2: document.getElementById("transport-phone2").value,
+        district: document.getElementById("transport-district").value,
+        vehicleType: document.getElementById("vehicle-type").value,
+        vehicleCapacity: document.getElementById("vehicle-capacity").value,
+        gps: document.getElementById("transport-gps").value,
+        availability: document.getElementById("availability").value,
+        notes: document.getElementById("transport-notes").value
+      };
+
+      fetch(scriptURL, {
+        method: "POST",
+        body: JSON.stringify(data)
+      })
+      .then(res => res.text())
+      .then(text => {
+        alert("Server says: " + text);
+      })
+      .catch(err => {
+        alert("Error: " + err);
+      });
+    }
+
+    // AFFECTED PEOPLE Functions
+    function addNeedRow() {
+      const tbody = document.querySelector("#needsTable tbody");
+      const row = document.createElement("tr");
+  
+      row.innerHTML = `
+        <td>
+          <select class="need-item">
+            <option value="">Select item</option>
+            <option>Food Packs</option>
+            <option>Water Bottles</option>
+            <option>Clothes</option>
+            <option>Medicines</option>
+            <option>Sanitary Items</option>
+            <option>Bedding</option>
+            <option>Shelter</option>
+            <option>Medical Help</option>
+          </select>
+        </td>
+        <td>
+          <input type="number" class="need-qty" min="1" placeholder="Qty">
+        </td>
+      `;
+      tbody.appendChild(row);
+    }
+
+    function getLocationAffected() {
+      if (!navigator.geolocation) {
+        alert("Geolocation is not supported on this device.");
+        return;
+      }
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const lat = pos.coords.latitude.toFixed(6);
+          const lng = pos.coords.longitude.toFixed(6);
+          document.getElementById("affected-gps").value = lat + ", " + lng;
+        },
+        (err) => {
+          alert("Unable to get location: " + err.message);
+        }
+      );
+    }
+
+    function submitAffectedForm() {
+      const rows = document.querySelectorAll("#needsTable tbody tr");
+      const needsArray = [];
+  
+      rows.forEach(row => {
+        const item = row.querySelector(".need-item").value;
+        const qty  = row.querySelector(".need-qty").value;
+  
+        if (item && qty) {
+          const itemNoSpace = item.replace(/\s+/g, "");
+          needsArray.push(itemNoSpace + "_" + qty + ";");
+        }
+      });
+  
+      if (needsArray.length === 0) {
+        alert("Please add at least one urgent need item.");
+        return;
+      }
+  
+      const needsString = needsArray.join("");
+  
+      const data = {
+        type: "affected",
+        name: document.getElementById("affected-name").value,
+        phone: document.getElementById("affected-phone").value,
+        phone2: document.getElementById("affected-phone2").value,
+        district: document.getElementById("affected-district").value,
+        gps: document.getElementById("affected-gps").value,
+        peopleCount: document.getElementById("people-count").value,
+        needs: needsString,
+        notes: document.getElementById("affected-notes").value
+      };
+
+      fetch(scriptURL, {
+        method: "POST",
+        body: JSON.stringify(data)
+      })
+      .then(res => res.text())
+      .then(text => {
+        alert("Server says: " + text);
+      })
+      .catch(err => {
+        alert("Error: " + err);
+      });
+    }
+
+    // COORDINATION Functions
+    let coordData = {
+      district: '',
+      affected: null,
+      donor: null,
+      transport: null
+    };
+
+    function loadDistrictData() {
+      const district = document.getElementById('coord-district').value;
+      if (!district) {
+        document.getElementById('step2').style.display = 'none';
+        document.getElementById('step3').style.display = 'none';
+        document.getElementById('step4').style.display = 'none';
+        document.getElementById('summary-box').style.display = 'none';
+        return;
+      }
+
+      coordData.district = district;
+      coordData.affected = null;
+      coordData.donor = null;
+      coordData.transport = null;
+
+      // Load affected people from selected district
+      document.getElementById('step2').style.display = 'block';
+      document.getElementById('affected-list').innerHTML = '<div class="loading">Loading affected people...</div>';
+
+      fetch(scriptURL + '?action=getCoordinationData&district=' + encodeURIComponent(district))
+        .then(res => res.json())
+        .then(data => {
+          displayAffectedList(data.affected);
+          // Store donor and transport data for later
+          window.coordDonors = data.donors;
+          window.coordTransports = data.transports;
+        })
+        .catch(err => {
+          document.getElementById('affected-list').innerHTML = '<div class="loading">Error loading data</div>';
+          console.error('Error:', err);
+        });
+    }
+
+    function displayAffectedList(affected) {
+      const list = document.getElementById('affected-list');
+      
+      if (!affected || affected.length === 0) {
+        list.innerHTML = '<div class="loading">No affected people in this district</div>';
+        return;
+      }
+
+      let html = '';
+      affected.forEach((person, index) => {
+        html += `
+          <div class="selection-card" onclick="selectAffected(${index})">
+            <input type="radio" name="affected" id="affected-${index}">
+            <label for="affected-${index}" style="cursor: pointer; display: inline;">
+              <h5>👤 ${person.name} - ${person.peopleCount} people affected</h5>
+              <p><strong>📞 Phone:</strong> ${person.phone}</p>
+              <p><strong>🆘 Needs:</strong> ${person.needsFormatted}</p>
+              ${person.gps ? `<p><strong>📍 Location:</strong> ${person.gps}</p>` : ''}
+              <p style="font-size: 12px; color: #999;">Reported: ${person.timestamp}</p>
+            </label>
+          </div>
+        `;
+      });
+
+      list.innerHTML = html;
+      window.coordAffectedData = affected;
+    }
+
+    function selectAffected(index) {
+      document.getElementById('affected-' + index).checked = true;
+      document.querySelectorAll('#affected-list .selection-card').forEach(card => card.classList.remove('selected'));
+      event.currentTarget.classList.add('selected');
+      
+      coordData.affected = window.coordAffectedData[index];
+      
+      // Show donor selection
+      document.getElementById('step3').style.display = 'block';
+      displayDonorList(window.coordDonors);
+    }
+
+    function displayDonorList(donors) {
+      const list = document.getElementById('donor-list');
+      
+      if (!donors || donors.length === 0) {
+        list.innerHTML = '<div class="loading">No donors available in this district</div>';
+        return;
+      }
+
+      let html = '';
+      donors.forEach((donor, index) => {
+        html += `
+          <div class="selection-card" onclick="selectDonor(${index})">
+            <input type="radio" name="donor" id="donor-${index}">
+            <label for="donor-${index}" style="cursor: pointer; display: inline;">
+              <h5>🎁 ${donor.name}</h5>
+              <p><strong>📞 Phone:</strong> ${donor.phone}</p>
+              <p><strong>📦 Donations:</strong> ${donor.donationsFormatted}</p>
+              ${donor.gps ? `<p><strong>📍 Location:</strong> ${donor.gps}</p>` : ''}
+            </label>
+          </div>
+        `;
+      });
+
+      list.innerHTML = html;
+      window.coordDonorData = donors;
+    }
+
+    function selectDonor(index) {
+      document.getElementById('donor-' + index).checked = true;
+      document.querySelectorAll('#donor-list .selection-card').forEach(card => card.classList.remove('selected'));
+      event.currentTarget.classList.add('selected');
+      
+      coordData.donor = window.coordDonorData[index];
+      
+      // Show transport selection
+      document.getElementById('step4').style.display = 'block';
+      displayTransportList(window.coordTransports);
+    }
+
+    function displayTransportList(transports) {
+      const list = document.getElementById('transport-list');
+      
+      if (!transports || transports.length === 0) {
+        list.innerHTML = '<div class="loading">No transport providers available in this district</div>';
+        return;
+      }
+
+      let html = '';
+      transports.forEach((transport, index) => {
+        html += `
+          <div class="selection-card" onclick="selectTransport(${index})">
+            <input type="radio" name="transport" id="transport-${index}">
+            <label for="transport-${index}" style="cursor: pointer; display: inline;">
+              <h5>🚚 ${transport.name}</h5>
+              <p><strong>📞 Phone:</strong> ${transport.phone}</p>
+              <p><strong>🚗 Vehicle:</strong> ${transport.vehicleType} (Capacity: ${transport.vehicleCapacity})</p>
+              <p><strong>✅ Availability:</strong> ${transport.availability}</p>
+              ${transport.gps ? `<p><strong>📍 Location:</strong> ${transport.gps}</p>` : ''}
+            </label>
+          </div>
+        `;
+      });
+
+      list.innerHTML = html;
+      window.coordTransportData = transports;
+    }
+
+    function selectTransport(index) {
+      document.getElementById('transport-' + index).checked = true;
+      document.querySelectorAll('#transport-list .selection-card').forEach(card => card.classList.remove('selected'));
+      event.currentTarget.classList.add('selected');
+      
+      coordData.transport = window.coordTransportData[index];
+      
+      // Show summary
+      showCoordinationSummary();
+    }
+
+    function showCoordinationSummary() {
+      const summary = document.getElementById('coordination-summary');
+      summary.innerHTML = `
+        <p><strong>📍 District:</strong> ${coordData.district}</p>
+        <hr>
+        <p><strong>🆘 Recipient:</strong> ${coordData.affected.name} (${coordData.affected.phone})</p>
+        <p><strong>Needs:</strong> ${coordData.affected.needsFormatted}</p>
+        <hr>
+        <p><strong>🎁 Donor:</strong> ${coordData.donor.name} (${coordData.donor.phone})</p>
+        <p><strong>Donating:</strong> ${coordData.donor.donationsFormatted}</p>
+        <hr>
+        <p><strong>🚚 Transport:</strong> ${coordData.transport.name} (${coordData.transport.phone})</p>
+        <p><strong>Vehicle:</strong> ${coordData.transport.vehicleType} - ${coordData.transport.availability}</p>
+      `;
+      
+      document.getElementById('summary-box').style.display = 'block';
+    }
+
+    function submitCoordination() {
+      const data = {
+        type: "coordination",
+        district: coordData.district,
+        affected: coordData.affected,
+        donor: coordData.donor,
+        transport: coordData.transport,
+        timestamp: new Date().toISOString()
+      };
+
+      fetch(scriptURL, {
+        method: "POST",
+        body: JSON.stringify(data)
+      })
+      .then(res => res.text())
+      .then(text => {
+        alert("✅ Coordination successful! SMS notification sent to transport provider.\n\n" + text);
+        resetCoordination();
+      })
+      .catch(err => {
+        alert("❌ Error: " + err);
+      });
+    }
+
+    function resetCoordination() {
+      coordData = { district: '', affected: null, donor: null, transport: null };
+      document.getElementById('coord-district').value = '';
+      document.getElementById('step2').style.display = 'none';
+      document.getElementById('step3').style.display = 'none';
+      document.getElementById('step4').style.display = 'none';
+      document.getElementById('summary-box').style.display = 'none';
     }
   </script>
 </body>
