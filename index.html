@@ -1,90 +1,87 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Flood Relief Registration</title>
+  <title>Donor Registration - Flood Relief</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-    body { font-family: Arial; padding: 20px; }
-    label { font-weight: bold; display: block; margin-top: 15px; }
-    select, input { width: 100%; padding: 8px; margin-top: 5px; }
-    button { padding: 10px; margin-top: 20px; width: 100%; }
+    body { font-family: Arial; padding: 20px; background: #f0f4f7; }
+    h2 { text-align: center; }
+    label { display: block; margin-top: 15px; font-weight: bold; }
+    input, select, textarea {
+      width: 100%; padding: 10px; margin-top: 5px; border-radius: 5px; border: 1px solid #ccc;
+    }
+    button {
+      width: 100%; padding: 12px; margin-top: 20px;
+      background: #007bff; color: white; border: none; border-radius: 5px;
+      font-size: 16px; cursor: pointer;
+    }
+    button:hover { background: #0056b3; }
   </style>
 </head>
 
 <body>
-  <h2>Flood Relief Registration</h2>
+  <h2>Donor Registration Form</h2>
 
-  <label>Your Name</label>
+  <label>Name</label>
   <input type="text" id="name" required>
 
+  <label>Phone Number</label>
+  <input type="text" id="phone" required>
+
   <label>District</label>
-  <select id="district" onchange="loadAreas()">
+  <select id="district">
     <option>Select District</option>
     <option>Colombo</option>
+    <option>Gampaha</option>
     <option>Kandy</option>
     <option>Jaffna</option>
     <option>Batticaloa</option>
     <option>Kurunegala</option>
-    <!-- add all 25 districts -->
+    <option>Anuradhapura</option>
+    <!-- Add all 25 districts -->
   </select>
 
-  <label>Area / Town</label>
-  <select id="area">
-    <option>Select District First</option>
+  <label>Donation Type</label>
+  <select id="donation">
+    <option>Food Packs</option>
+    <option>Water Bottles</option>
+    <option>Clothes</option>
+    <option>Medicines</option>
+    <option>Sanitary Items</option>
+    <option>Bedding</option>
   </select>
 
-  <label>Your GPS Location</label>
-  <input type="text" id="gps" readonly>
-  <button onclick="getLocation()">Get My Location</button>
+  <label>Quantity</label>
+  <input type="number" id="qty" required>
+
+  <label>Additional Notes (Optional)</label>
+  <textarea id="notes"></textarea>
 
   <button onclick="submitForm()">Submit</button>
 
   <script>
-    const areas = {
-      "Colombo": ["Colombo 01", "Colombo 02", "Kotte", "Dehiwala"],
-      "Kandy": ["Kandy City", "Peradeniya", "Gampola"],
-      "Jaffna": ["Jaffna City", "Nallur", "Kopay"],
-      "Batticaloa": ["Batticaloa City", "Kattankudy"],
-      "Kurunegala": ["Kurunegala City", "Kuliyapitiya"]
-      // Add all simplified area lists
-    };
-
-    function loadAreas() {
-      const district = document.getElementById("district").value;
-      const areaSelect = document.getElementById("area");
-      areaSelect.innerHTML = "";
-
-      areas[district].forEach(function(a) {
-        let opt = document.createElement("option");
-        opt.textContent = a;
-        areaSelect.appendChild(opt);
-      });
-    }
-
-    function getLocation() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(pos) {
-          document.getElementById("gps").value =
-            pos.coords.latitude + ", " + pos.coords.longitude;
-        });
-      }
-    }
-
     function submitForm() {
       const data = {
         name: document.getElementById("name").value,
+        phone: document.getElementById("phone").value,
         district: document.getElementById("district").value,
-        area: document.getElementById("area").value,
-        gps: document.getElementById("gps").value
+        donation: document.getElementById("donation").value,
+        quantity: document.getElementById("qty").value,
+        notes: document.getElementById("notes").value
       };
 
-      fetch("YOUR_GOOGLE_APPS_SCRIPT_URL", {
+      // Change this URL to your Google Apps Script Web App URL
+      const scriptURL = "https://script.google.com/macros/s/AKfycbxNrPQojUsPiq6P2jWC1Ea2EtWsyPN-ImOnovUmCZnbpxNgB3m4JH_OE-xQNvOBR1cjoA/exec";
+
+      fetch(scriptURL, {
         method: "POST",
         mode: "no-cors",
         body: JSON.stringify(data)
       });
 
-      alert("Submitted Successfully!");
+      alert("Thank you! Your donation details have been recorded.");
     }
   </script>
+
 </body>
 </html>
