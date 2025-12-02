@@ -98,12 +98,11 @@
 
   <script>
     const scriptURL = "https://script.google.com/macros/s/AKfycbxNrPQojUsPiq6P2jWC1Ea2EtWsyPN-ImOnovUmCZnbpxNgB3m4JH_OE-xQNvOBR1cjoA/exec";
-
-    // Add new row to donation table
+  
     function addDonationRow() {
       const tbody = document.querySelector("#donationTable tbody");
       const row = document.createElement("tr");
-
+  
       row.innerHTML = `
         <td>
           <select class="donation-item">
@@ -122,8 +121,7 @@
       `;
       tbody.appendChild(row);
     }
-
-    // Get GPS coordinates
+  
     function getLocation() {
       if (!navigator.geolocation) {
         alert("Geolocation is not supported on this device.");
@@ -140,29 +138,41 @@
         }
       );
     }
-
+  
     function submitForm() {
-      // Collect donation rows
+      // collect donation rows
       const rows = document.querySelectorAll("#donationTable tbody tr");
-      const donations = [];
-
+      const donationsArray = [];
+  
       rows.forEach(row => {
         const item = row.querySelector(".donation-item").value;
         const qty  = row.querySelector(".donation-qty").value;
+  
         if (item && qty) {
-          donations.push(item + " x " + qty);
+          // remove spaces in item name: "Food Packs" -> "FoodPacks"
+          const itemNoSpace = item.replace(/\s+/g, "");
+          // push in format ItemWithoutSpace_qty;
+          donationsArray.push(itemNoSpace + "_" + qty + ";");
         }
       });
-
+  
+      if (donationsArray.length === 0) {
+        alert("Please add at least one donation item and quantity.");
+        return;
+      }
+  
+      // join into one string: FoodPacks_10;WaterBottles_5;
+      const donationsString = donationsArray.join("");
+  
       const data = {
         name: document.getElementById("name").value,
         phone: document.getElementById("phone").value,
         district: document.getElementById("district").value,
-        donations: donations.join("; "),     // e.g. "Food Packs x 10; Water Bottles x 5"
+        donations: donationsString,                 // 👈 "ItemNoSpace_qty;ItemNoSpace_qty;"
         gps: document.getElementById("gps").value,
         notes: document.getElementById("notes").value
       };
-
+  
       fetch(scriptURL, {
         method: "POST",
         body: JSON.stringify(data)
