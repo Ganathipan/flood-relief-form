@@ -4,36 +4,82 @@
   <title>Flood Relief Registration</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-    body { font-family: Arial; padding: 20px; background: #f0f4f7; }
-    h2 { text-align: center; }
-    label { display: block; margin-top: 15px; font-weight: bold; }
+    * {
+      box-sizing: border-box;
+    }
+    body { 
+      font-family: Arial, sans-serif; 
+      padding: 10px; 
+      background: #f0f4f7; 
+      margin: 0;
+    }
+    h2 { 
+      text-align: center; 
+      font-size: 24px;
+      margin: 15px 0;
+    }
+    h3 {
+      font-size: 20px;
+    }
+    h4 {
+      font-size: 18px;
+    }
+    label { 
+      display: block; 
+      margin-top: 15px; 
+      font-weight: bold;
+      font-size: 16px;
+    }
     input, select, textarea {
-      width: 100%; padding: 10px; margin-top: 5px; border-radius: 5px; border: 1px solid #ccc;
+      width: 100%; 
+      padding: 14px; 
+      margin-top: 5px; 
+      border-radius: 8px; 
+      border: 1px solid #ccc;
+      font-size: 16px;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    textarea {
+      min-height: 100px;
+      resize: vertical;
     }
     button {
-      padding: 10px 12px; margin-top: 10px;
-      background: #007bff; color: white; border: none; border-radius: 5px;
-      font-size: 14px; cursor: pointer;
+      padding: 14px 20px; 
+      margin-top: 10px;
+      background: #007bff; 
+      color: white; 
+      border: none; 
+      border-radius: 8px;
+      font-size: 16px; 
+      cursor: pointer;
+      touch-action: manipulation;
+      min-height: 48px;
     }
     button:hover { background: #0056b3; }
+    button:active {
+      transform: scale(0.98);
+    }
 
     /* Navigation Tabs */
     .tabs {
       display: flex;
       justify-content: center;
       gap: 10px;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
       flex-wrap: wrap;
+      padding: 0 10px;
     }
     .tab-button {
-      padding: 12px 24px;
+      padding: 14px 24px;
       background: #6c757d;
       color: white;
       border: none;
-      border-radius: 5px;
+      border-radius: 8px;
       cursor: pointer;
       font-size: 16px;
       transition: background 0.3s;
+      min-height: 48px;
     }
     .tab-button:hover {
       background: #5a6268;
@@ -51,8 +97,8 @@
       max-width: 800px;
       margin: 0 auto;
       background: white;
-      padding: 30px;
-      border-radius: 10px;
+      padding: 20px;
+      border-radius: 12px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
     .page-content.active {
@@ -61,78 +107,113 @@
 
     /* Table-style donations */
     table {
-      width: 100%; border-collapse: collapse; margin-top: 8px;
+      width: 100%; 
+      border-collapse: collapse; 
+      margin-top: 8px;
       background: #ffffff;
     }
     th, td {
-      border: 1px solid #ccc; padding: 6px;
+      border: 1px solid #ccc; 
+      padding: 10px;
     }
-    th { background: #e6edf5; text-align: left; }
+    th { 
+      background: #e6edf5; 
+      text-align: left;
+      font-size: 16px;
+    }
+    td select,
+    td input {
+      padding: 10px;
+      font-size: 16px;
+    }
     .full-width-submit {
-      width: 100%; margin-top: 20px; font-size: 16px;
+      width: 100%; 
+      margin-top: 20px; 
+      font-size: 18px;
+      font-weight: bold;
+      min-height: 52px;
     }
 
     /* Needs List View */
     .needs-section {
       margin-bottom: 30px;
-      padding: 20px;
+      padding: 15px;
       background: #f8f9fa;
-      border-radius: 8px;
+      border-radius: 12px;
       border: 2px solid #007bff;
     }
     .needs-section h4 {
       margin-top: 0;
       color: #007bff;
+      font-size: 18px;
     }
     .filter-section {
       margin-bottom: 15px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+    .filter-section label {
+      margin: 0;
+      font-size: 16px;
     }
     .filter-section select {
-      width: auto;
-      display: inline-block;
-      margin-right: 10px;
+      flex: 1;
+      min-width: 150px;
+      padding: 12px;
+      font-size: 16px;
+    }
+    .filter-section button {
+      padding: 12px 16px;
+      font-size: 16px;
+      min-height: 48px;
     }
     .needs-list {
       max-height: 400px;
       overflow-y: auto;
       background: white;
       padding: 15px;
-      border-radius: 5px;
+      border-radius: 8px;
     }
     .need-card {
       border: 1px solid #ddd;
-      padding: 12px;
-      margin-bottom: 10px;
-      border-radius: 5px;
+      padding: 15px;
+      margin-bottom: 12px;
+      border-radius: 8px;
       background: #fff;
     }
     .need-card h5 {
-      margin: 0 0 8px 0;
+      margin: 0 0 10px 0;
       color: #333;
-      font-size: 16px;
+      font-size: 17px;
+      line-height: 1.4;
     }
     .need-card p {
-      margin: 4px 0;
-      font-size: 14px;
+      margin: 8px 0;
+      font-size: 15px;
       color: #666;
+      line-height: 1.5;
     }
     .need-card .urgent {
       color: #dc3545;
       font-weight: bold;
+      font-size: 15px;
     }
     .need-card .district-tag {
       display: inline-block;
       background: #007bff;
       color: white;
-      padding: 2px 8px;
-      border-radius: 3px;
-      font-size: 12px;
-      margin-right: 5px;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 14px;
+      margin-right: 8px;
     }
     .loading {
       text-align: center;
-      padding: 20px;
+      padding: 30px 20px;
       color: #666;
+      font-size: 16px;
     }
 
     /* Coordination Page Styles */
@@ -149,16 +230,22 @@
     }
     .selection-card {
       border: 2px solid #ddd;
-      padding: 15px;
-      margin-bottom: 10px;
-      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 15px;
+      border-radius: 12px;
       background: #fff;
       cursor: pointer;
       transition: all 0.3s;
+      min-height: 120px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
     .selection-card:hover {
       border-color: #007bff;
-      box-shadow: 0 2px 8px rgba(0,123,255,0.2);
+      box-shadow: 0 4px 12px rgba(0,123,255,0.2);
+      transform: translateY(-2px);
     }
     .selection-card.selected {
       border-color: #28a745;
@@ -167,13 +254,19 @@
     .selection-card input[type="radio"] {
       margin-right: 10px;
     }
+    .selection-card h4 {
+      margin: 10px 0;
+      color: #333;
+      font-size: 18px;
+    }
     .selection-card h5 {
       margin: 0 0 10px 0;
       color: #333;
     }
     .selection-card p {
       margin: 5px 0;
-      font-size: 14px;
+      font-size: 15px;
+      text-align: center;
     }
     .step-number {
       display: inline-block;
@@ -203,6 +296,64 @@
     }
     .btn-secondary:hover {
       background: #5a6268;
+    }
+
+    /* Mobile Responsive Improvements */
+    @media (max-width: 768px) {
+      body {
+        padding: 5px;
+      }
+      h2 {
+        font-size: 20px;
+        margin: 10px 0;
+      }
+      .page-content {
+        padding: 15px;
+        border-radius: 8px;
+      }
+      .selection-card {
+        padding: 25px 15px;
+        min-height: 140px;
+      }
+      .selection-card h3 {
+        font-size: 40px;
+      }
+      .selection-card h4 {
+        font-size: 16px;
+      }
+      .tabs {
+        padding: 0 5px;
+      }
+      .tab-button {
+        padding: 12px 16px;
+        font-size: 15px;
+      }
+      table th,
+      table td {
+        padding: 8px 5px;
+        font-size: 14px;
+      }
+      .filter-section {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .filter-section select,
+      .filter-section button {
+        width: 100%;
+        min-width: auto;
+      }
+      .needs-section {
+        padding: 12px;
+      }
+    }
+
+    /* Larger touch targets for mobile */
+    @media (hover: none) {
+      button,
+      .tab-button,
+      .selection-card {
+        min-height: 48px;
+      }
     }
   </style>
 </head>
