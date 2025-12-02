@@ -212,14 +212,48 @@
 
   <!-- Navigation Tabs -->
   <div class="tabs">
-    <button class="tab-button active" onclick="showPage('donor')">Donor</button>
-    <button class="tab-button" onclick="showPage('transport')">Transport</button>
+    <button class="tab-button active" onclick="showPage('selection')">Home</button>
+    <button class="tab-button" onclick="showPage('donation')">Donation / Transport</button>
     <button class="tab-button" onclick="showPage('affected')">Affected People</button>
-    <button class="tab-button" onclick="showPage('coordinate')">Coordinate Delivery</button>
   </div>
 
-  <!-- DONOR PAGE -->
-  <div id="donor-page" class="page-content active">
+  <!-- SELECTION PAGE (Home) -->
+  <div id="selection-page" class="page-content active">
+    <h3 style="text-align: center; margin-top: 0;">🏠 Welcome to Flood Relief System</h3>
+    <p style="text-align: center; color: #666; margin-bottom: 30px;">Please select your role to continue</p>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; max-width: 800px; margin: 0 auto;">
+      <div class="selection-card" onclick="selectRole('donor')" style="text-align: center; padding: 30px;">
+        <h3 style="font-size: 48px; margin: 0;">🎁</h3>
+        <h4 style="margin: 15px 0 10px 0; color: #007bff;">I Want to Donate</h4>
+        <p style="color: #666; font-size: 14px;">Provide relief items to affected areas</p>
+      </div>
+      
+      <div class="selection-card" onclick="selectRole('transport')" style="text-align: center; padding: 30px;">
+        <h3 style="font-size: 48px; margin: 0;">🚚</h3>
+        <h4 style="margin: 15px 0 10px 0; color: #007bff;">I Can Transport</h4>
+        <p style="color: #666; font-size: 14px;">Help deliver supplies to those in need</p>
+      </div>
+      
+      <div class="selection-card" onclick="selectRole('affected')" style="text-align: center; padding: 30px;">
+        <h3 style="font-size: 48px; margin: 0;">🆘</h3>
+        <h4 style="margin: 15px 0 10px 0; color: #dc3545;">I Need Help</h4>
+        <p style="color: #666; font-size: 14px;">Register your urgent needs</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- DONATION/TRANSPORT PAGE -->
+  <div id="donation-page" class="page-content">
+    <div style="text-align: center; margin-bottom: 30px;">
+      <button class="tab-button" id="donor-tab" onclick="switchDonationType('donor')" style="margin: 5px;">🎁 Donor</button>
+      <button class="tab-button" id="transport-tab" onclick="switchDonationType('transport')" style="margin: 5px;">🚚 Transport Supporter</button>
+    </div>lick="switchDonationType('donor')" style="margin: 5px;">🎁 Donor</button>
+      <button class="tab-button" id="transport-tab" onclick="switchDonationType('transport')" style="margin: 5px;">🚚 Transport Supporter</button>
+    </div>
+
+    <!-- DONOR FORM -->
+    <div id="donor-form" class="page-content active">
     <h3 style="text-align: center; margin-top: 0;">Donor Registration Form</h3>
 
     <!-- Needs from Affected People -->
@@ -344,12 +378,10 @@
   <button class="full-width-submit" onclick="submitForm()">Submit</button>
   </div>
 
-  <!-- TRANSPORT PAGE -->
-  <div id="transport-page" class="page-content">
-    <h3 style="text-align: center; margin-top: 0;">Transport Provider Registration</h3>
+    <!-- TRANSPORT FORM -->\n    <div id=\"transport-form\" class=\"page-content\" style=\"display: none;\">\n    <h3 style=\"text-align: center; margin-top: 0;\">Transport Supporter Registration</h3>\n\n    <!-- Needs from Affected People for Transport -->\n    <div class=\"needs-section\">\n      <h4>\ud83c\udd98 Where People Need Help & Available Supplies</h4>\n      <div class=\"filter-section\">\n        <label style=\"display: inline; margin-right: 10px;\">Filter by District:</label>\n        <select id=\"transport-needs-filter\" onchange=\"filterTransportNeeds()\">\n          <option value=\"\">All Districts</option>\n          <option>Ampara</option>\n          <option>Anuradhapura</option>\n          <option>Badulla</option>\n          <option>Batticaloa</option>\n          <option>Colombo</option>\n          <option>Galle</option>\n          <option>Gampaha</option>\n          <option>Hambantota</option>\n          <option>Jaffna</option>\n          <option>Kalutara</option>\n          <option>Kandy</option>\n          <option>Kegalle</option>\n          <option>Kilinochchi</option>\n          <option>Kurunegala</option>\n          <option>Mannar</option>\n          <option>Matale</option>\n          <option>Matara</option>\n          <option>Monaragala</option>\n          <option>Mullaitivu</option>\n          <option>Nuwara Eliya</option>\n          <option>Polonnaruwa</option>\n          <option>Puttalam</option>\n          <option>Ratnapura</option>\n          <option>Trincomalee</option>\n          <option>Vavuniya</option>\n        </select>\n        <button type=\"button\" onclick=\"loadTransportNeeds()\">\ud83d\udd04 Refresh</button>\n      </div>\n      <div id=\"transport-needs-list\" class=\"needs-list\">\n        <div class=\"loading\">Loading needs and available supplies...</div>\n      </div>\n    </div>
 
     <label>Name / Organization</label>
-    <input type="text" id="transport-name" required>
+    <input type=\"text\" id=\"transport-name\" required>
 
     <label>Phone Number</label>
     <input type="text" id="transport-phone" required>
@@ -449,6 +481,7 @@
     <textarea id="transport-notes"></textarea>
 
     <button class="full-width-submit" onclick="submitTransportForm()">Submit</button>
+    </div>
   </div>
 
   <!-- AFFECTED PEOPLE PAGE -->
@@ -538,100 +571,66 @@
     <button class="full-width-submit" onclick="submitAffectedForm()">Submit</button>
   </div>
 
-  <!-- COORDINATE DELIVERY PAGE -->
-  <div id="coordinate-page" class="page-content">
-    <h3 style="text-align: center; margin-top: 0;">🚚 Coordinate Relief Delivery</h3>
-    <p style="text-align: center; color: #666;">Match donors with transport providers to deliver relief to affected areas</p>
-
-    <!-- Step 1: Select District -->
-    <div class="coordination-step" id="step1">
-      <h4><span class="step-number">1</span>Select District</h4>
-      <label>Choose the district to coordinate relief:</label>
-      <select id="coord-district" onchange="loadDistrictData()">
-        <option value="">Select District</option>
-        <option>Ampara</option>
-        <option>Anuradhapura</option>
-        <option>Badulla</option>
-        <option>Batticaloa</option>
-        <option>Colombo</option>
-        <option>Galle</option>
-        <option>Gampaha</option>
-        <option>Hambantota</option>
-        <option>Jaffna</option>
-        <option>Kalutara</option>
-        <option>Kandy</option>
-        <option>Kegalle</option>
-        <option>Kilinochchi</option>
-        <option>Kurunegala</option>
-        <option>Mannar</option>
-        <option>Matale</option>
-        <option>Matara</option>
-        <option>Monaragala</option>
-        <option>Mullaitivu</option>
-        <option>Nuwara Eliya</option>
-        <option>Polonnaruwa</option>
-        <option>Puttalam</option>
-        <option>Ratnapura</option>
-        <option>Trincomalee</option>
-        <option>Vavuniya</option>
-      </select>
-    </div>
-
-    <!-- Step 2: Select Affected Person -->
-    <div class="coordination-step" id="step2" style="display: none;">
-      <h4><span class="step-number">2</span>Select Affected Person (Highest Need)</h4>
-      <div id="affected-list">
-        <div class="loading">Please select a district first</div>
-      </div>
-    </div>
-
-    <!-- Step 3: Select Donor -->
-    <div class="coordination-step" id="step3" style="display: none;">
-      <h4><span class="step-number">3</span>Select Donor</h4>
-      <div id="donor-list">
-        <div class="loading">Please complete step 2</div>
-      </div>
-    </div>
-
-    <!-- Step 4: Select Transport Provider -->
-    <div class="coordination-step" id="step4" style="display: none;">
-      <h4><span class="step-number">4</span>Select Transport Provider</h4>
-      <div id="transport-list">
-        <div class="loading">Please complete step 3</div>
-      </div>
-    </div>
-
-    <!-- Summary and Submit -->
-    <div class="summary-box" id="summary-box" style="display: none;">
-      <h5>📋 Delivery Coordination Summary</h5>
-      <div id="coordination-summary"></div>
-      <button class="full-width-submit" onclick="submitCoordination()">✅ Confirm & Send SMS Notification</button>
-      <button class="btn-secondary" onclick="resetCoordination()">🔄 Start Over</button>
-    </div>
-  </div>
-
   <script>
     const scriptURL = "https://script.google.com/macros/s/AKfycbxNrPQojUsPiq6P2jWC1Ea2EtWsyPN-ImOnovUmCZnbpxNgB3m4JH_OE-xQNvOBR1cjoA/exec";
 
     let allNeedsData = [];
+    let allDonorsData = [];
+    let currentRole = 'donor';
+
+    // Role Selection
+    function selectRole(role) {
+      if (role === 'affected') {
+        showPage('affected');
+      } else {
+        currentRole = role;
+        showPage('donation');
+        switchDonationType(role);
+      }
+    }
+
+    // Switch between donor and transport in donation page
+    function switchDonationType(type) {
+      currentRole = type;
+      
+      // Update tab buttons
+      document.getElementById('donor-tab').classList.remove('active');
+      document.getElementById('transport-tab').classList.remove('active');
+      
+      if (type === 'donor') {
+        document.getElementById('donor-tab').classList.add('active');
+        document.getElementById('donor-form').style.display = 'block';
+        document.getElementById('transport-form').style.display = 'none';
+        loadNeeds();
+      } else {
+        document.getElementById('transport-tab').classList.add('active');
+        document.getElementById('donor-form').style.display = 'none';
+        document.getElementById('transport-form').style.display = 'block';
+        loadTransportNeeds();
+      }
+    }
 
     // Page Navigation
     function showPage(page) {
       // Hide all pages
-      document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
-      document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.page-content').forEach(p => {
+        if (!p.id.includes('-form')) {
+          p.classList.remove('active');
+        }
+      });
+      document.querySelectorAll('.tabs .tab-button').forEach(b => b.classList.remove('active'));
 
       // Show selected page
       document.getElementById(page + '-page').classList.add('active');
       event.target.classList.add('active');
 
-      // Load needs when donor page is shown
-      if (page === 'donor') {
-        loadNeeds();
+      // Load data based on page
+      if (page === 'donation') {
+        switchDonationType(currentRole);
       }
     }
 
-    // Load needs from affected people
+    // Load needs from affected people (for donors)
     function loadNeeds() {
       const needsList = document.getElementById('needs-list');
       needsList.innerHTML = '<div class="loading">Loading needs data...</div>';
@@ -924,218 +923,88 @@
       });
     }
 
-    // COORDINATION Functions
-    let coordData = {
-      district: '',
-      affected: null,
-      donor: null,
-      transport: null
-    };
+    // Load needs and donors for transport supporters
+    function loadTransportNeeds() {
+      const needsList = document.getElementById('transport-needs-list');
+      needsList.innerHTML = '<div class="loading">Loading needs and available supplies...</div>';
 
-    function loadDistrictData() {
-      const district = document.getElementById('coord-district').value;
-      if (!district) {
-        document.getElementById('step2').style.display = 'none';
-        document.getElementById('step3').style.display = 'none';
-        document.getElementById('step4').style.display = 'none';
-        document.getElementById('summary-box').style.display = 'none';
-        return;
-      }
-
-      coordData.district = district;
-      coordData.affected = null;
-      coordData.donor = null;
-      coordData.transport = null;
-
-      // Load affected people from selected district
-      document.getElementById('step2').style.display = 'block';
-      document.getElementById('affected-list').innerHTML = '<div class="loading">Loading affected people...</div>';
-
-      fetch(scriptURL + '?action=getCoordinationData&district=' + encodeURIComponent(district))
-        .then(res => res.json())
-        .then(data => {
-          displayAffectedList(data.affected);
-          // Store donor and transport data for later
-          window.coordDonors = data.donors;
-          window.coordTransports = data.transports;
-        })
-        .catch(err => {
-          document.getElementById('affected-list').innerHTML = '<div class="loading">Error loading data</div>';
-          console.error('Error:', err);
-        });
-    }
-
-    function displayAffectedList(affected) {
-      const list = document.getElementById('affected-list');
-      
-      if (!affected || affected.length === 0) {
-        list.innerHTML = '<div class="loading">No affected people in this district</div>';
-        return;
-      }
-
-      let html = '';
-      affected.forEach((person, index) => {
-        html += `
-          <div class="selection-card" onclick="selectAffected(${index})">
-            <input type="radio" name="affected" id="affected-${index}">
-            <label for="affected-${index}" style="cursor: pointer; display: inline;">
-              <h5>👤 ${person.name} - ${person.peopleCount} people affected</h5>
-              <p><strong>📞 Phone:</strong> ${person.phone}</p>
-              <p><strong>🆘 Needs:</strong> ${person.needsFormatted}</p>
-              ${person.gps ? `<p><strong>📍 Location:</strong> ${person.gps}</p>` : ''}
-              <p style="font-size: 12px; color: #999;">Reported: ${person.timestamp}</p>
-            </label>
-          </div>
-        `;
-      });
-
-      list.innerHTML = html;
-      window.coordAffectedData = affected;
-    }
-
-    function selectAffected(index) {
-      document.getElementById('affected-' + index).checked = true;
-      document.querySelectorAll('#affected-list .selection-card').forEach(card => card.classList.remove('selected'));
-      event.currentTarget.classList.add('selected');
-      
-      coordData.affected = window.coordAffectedData[index];
-      
-      // Show donor selection
-      document.getElementById('step3').style.display = 'block';
-      displayDonorList(window.coordDonors);
-    }
-
-    function displayDonorList(donors) {
-      const list = document.getElementById('donor-list');
-      
-      if (!donors || donors.length === 0) {
-        list.innerHTML = '<div class="loading">No donors available in this district</div>';
-        return;
-      }
-
-      let html = '';
-      donors.forEach((donor, index) => {
-        html += `
-          <div class="selection-card" onclick="selectDonor(${index})">
-            <input type="radio" name="donor" id="donor-${index}">
-            <label for="donor-${index}" style="cursor: pointer; display: inline;">
-              <h5>🎁 ${donor.name}</h5>
-              <p><strong>📞 Phone:</strong> ${donor.phone}</p>
-              <p><strong>📦 Donations:</strong> ${donor.donationsFormatted}</p>
-              ${donor.gps ? `<p><strong>📍 Location:</strong> ${donor.gps}</p>` : ''}
-            </label>
-          </div>
-        `;
-      });
-
-      list.innerHTML = html;
-      window.coordDonorData = donors;
-    }
-
-    function selectDonor(index) {
-      document.getElementById('donor-' + index).checked = true;
-      document.querySelectorAll('#donor-list .selection-card').forEach(card => card.classList.remove('selected'));
-      event.currentTarget.classList.add('selected');
-      
-      coordData.donor = window.coordDonorData[index];
-      
-      // Show transport selection
-      document.getElementById('step4').style.display = 'block';
-      displayTransportList(window.coordTransports);
-    }
-
-    function displayTransportList(transports) {
-      const list = document.getElementById('transport-list');
-      
-      if (!transports || transports.length === 0) {
-        list.innerHTML = '<div class="loading">No transport providers available for this district</div>';
-        return;
-      }
-
-      let html = '';
-      transports.forEach((transport, index) => {
-        html += `
-          <div class="selection-card" onclick="selectTransport(${index})">
-            <input type="radio" name="transport" id="transport-${index}">
-            <label for="transport-${index}" style="cursor: pointer; display: inline;">
-              <h5>🚚 ${transport.name}</h5>
-              <p><strong>📞 Phone:</strong> ${transport.phone}</p>
-              <p><strong>🏠 Home District:</strong> ${transport.homeDistrict}</p>
-              <p><strong>🗺️ Services:</strong> ${transport.serviceDistricts}</p>
-              <p><strong>🚗 Vehicle:</strong> ${transport.vehicleType} (Capacity: ${transport.vehicleCapacity})</p>
-              <p><strong>✅ Availability:</strong> ${transport.availability}</p>
-              ${transport.gps ? `<p><strong>📍 Location:</strong> ${transport.gps}</p>` : ''}
-            </label>
-          </div>
-        `;
-      });
-
-      list.innerHTML = html;
-      window.coordTransportData = transports;
-    }
-
-    function selectTransport(index) {
-      document.getElementById('transport-' + index).checked = true;
-      document.querySelectorAll('#transport-list .selection-card').forEach(card => card.classList.remove('selected'));
-      event.currentTarget.classList.add('selected');
-      
-      coordData.transport = window.coordTransportData[index];
-      
-      // Show summary
-      showCoordinationSummary();
-    }
-
-    function showCoordinationSummary() {
-      const summary = document.getElementById('coordination-summary');
-      summary.innerHTML = `
-        <p><strong>📍 District:</strong> ${coordData.district}</p>
-        <hr>
-        <p><strong>🆘 Recipient:</strong> ${coordData.affected.name} (${coordData.affected.phone})</p>
-        <p><strong>Needs:</strong> ${coordData.affected.needsFormatted}</p>
-        <hr>
-        <p><strong>🎁 Donor:</strong> ${coordData.donor.name} (${coordData.donor.phone})</p>
-        <p><strong>Donating:</strong> ${coordData.donor.donationsFormatted}</p>
-        <hr>
-        <p><strong>🚚 Transport:</strong> ${coordData.transport.name} (${coordData.transport.phone})</p>
-        <p><strong>Home District:</strong> ${coordData.transport.homeDistrict}</p>
-        <p><strong>Vehicle:</strong> ${coordData.transport.vehicleType} - ${coordData.transport.availability}</p>
-      `;
-      
-      document.getElementById('summary-box').style.display = 'block';
-    }
-
-    function submitCoordination() {
-      const data = {
-        type: "coordination",
-        district: coordData.district,
-        affected: coordData.affected,
-        donor: coordData.donor,
-        transport: coordData.transport,
-        timestamp: new Date().toISOString()
-      };
-
-      fetch(scriptURL, {
-        method: "POST",
-        body: JSON.stringify(data)
-      })
-      .then(res => res.text())
-      .then(text => {
-        alert("✅ Coordination successful! SMS notification sent to transport provider.\n\n" + text);
-        resetCoordination();
+      Promise.all([
+        fetch(scriptURL + '?action=getNeeds').then(res => res.json()),
+        fetch(scriptURL + '?action=getDonors').then(res => res.json())
+      ])
+      .then(([needs, donors]) => {
+        displayTransportNeeds(needs, donors);
       })
       .catch(err => {
-        alert("❌ Error: " + err);
+        needsList.innerHTML = '<div class="loading">Error loading data. Please try again.</div>';
+        console.error('Error:', err);
       });
     }
 
-    function resetCoordination() {
-      coordData = { district: '', affected: null, donor: null, transport: null };
-      document.getElementById('coord-district').value = '';
-      document.getElementById('step2').style.display = 'none';
-      document.getElementById('step3').style.display = 'none';
-      document.getElementById('step4').style.display = 'none';
-      document.getElementById('summary-box').style.display = 'none';
+    function displayTransportNeeds(needs, donors) {
+      const needsList = document.getElementById('transport-needs-list');
+      
+      if ((!needs || needs.length === 0) && (!donors || donors.length === 0)) {
+        needsList.innerHTML = '<div class="loading">No data available yet.</div>';
+        return;
+      }
+
+      let html = '<h5 style="color: #dc3545; margin-top: 0;">🆘 Urgent Needs:</h5>';
+      
+      if (needs && needs.length > 0) {
+        needs.forEach(need => {
+          html += `
+            <div class="need-card">
+              <h5><span class="district-tag">${need.district}</span> ${need.name}</h5>
+              <p><strong>📞 Contact:</strong> ${need.phone}</p>
+              <p><strong>👥 People Affected:</strong> ${need.peopleCount}</p>
+              <p class="urgent"><strong>🆘 Needs:</strong> ${need.needsFormatted}</p>
+              ${need.gps ? `<p><strong>📍 Location:</strong> ${need.gps}</p>` : ''}
+            </div>
+          `;
+        });
+      }
+
+      html += '<h5 style="color: #28a745; margin-top: 20px;">🎁 Available Supplies from Donors:</h5>';
+      
+      if (donors && donors.length > 0) {
+        donors.forEach(donor => {
+          html += `
+            <div class="need-card" style="border-color: #28a745;">
+              <h5><span class="district-tag" style="background: #28a745;">${donor.district}</span> ${donor.name}</h5>
+              <p><strong>📞 Contact:</strong> ${donor.phone}</p>
+              <p style="color: #28a745;"><strong>📦 Available:</strong> ${donor.donationsFormatted}</p>
+              ${donor.gps ? `<p><strong>📍 Location:</strong> ${donor.gps}</p>` : ''}
+            </div>
+          `;
+        });
+      } else {
+        html += '<div class="loading">No donations available yet.</div>';
+      }
+
+      needsList.innerHTML = html;
     }
+
+    function filterTransportNeeds() {
+      const selectedDistrict = document.getElementById('transport-needs-filter').value;
+      
+      Promise.all([
+        fetch(scriptURL + '?action=getNeeds').then(res => res.json()),
+        fetch(scriptURL + '?action=getDonors').then(res => res.json())
+      ])
+      .then(([needs, donors]) => {
+        if (selectedDistrict) {
+          needs = needs.filter(need => need.district === selectedDistrict);
+          donors = donors.filter(donor => donor.district === selectedDistrict);
+        }
+        displayTransportNeeds(needs, donors);
+      });
+    }
+
+    // Load needs on page load
+    window.addEventListener('DOMContentLoaded', function() {
+      switchDonationType('donor');
+    });
   </script>
 </body>
 </html>

@@ -4,7 +4,12 @@ function doGet(e) {
     return getNeedsData();
   }
   
-  // Check if this is a request for coordination data
+  // Check if this is a request for donors data
+  if (e && e.parameter && e.parameter.action === 'getDonors') {
+    return getDonorsData();
+  }
+  
+  // Check if this is a request for coordination data (deprecated but kept for compatibility)
   if (e && e.parameter && e.parameter.action === 'getCoordinationData') {
     return getCoordinationData(e.parameter.district);
   }
@@ -61,6 +66,58 @@ function getNeedsData() {
       
   } catch (error) {
     Logger.log("Error in getNeedsData: " + error.toString());
+    return ContentService
+      .createTextOutput(JSON.stringify([]))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+function getDonorsData() {
+  try {
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var sheet = ss.getSheetByName("DonorResponses");
+    
+    if (!sheet) {
+      return ContentService
+        .createTextOutput(JSON.stringify([]))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+    
+    var data = sheet.getDataRange().getValues();
+    
+    // Skip header row
+    var donors = [];
+    for (var i = 1; i < data.length; i++) {
+      var row = data[i];
+      
+      // Format the donations string for display
+      var donationsString = row[5] || ""; // Column F: Donations
+      var donationsFormatted = formatNeedsString(donationsString);
+      
+      donors.push({
+        timestamp: formatDate(row[0]),        // A: Timestamp
+        name: row[1] || "",                   // B: Name
+        phone: row[2] || "",                  // C: Phone
+        phone2: row[3] || "",                 // D: Second Phone
+        district: row[4] || "",               // E: District
+        donations: donationsString,           // F: Donations (raw)
+        donationsFormatted: donationsFormatted, // F: Donations (formatted)
+        gps: row[6] || "",                    // G: GPS
+        notes: row[7] || ""                   // H: Notes
+      });
+    }
+    
+    // Sort by timestamp (most recent first)
+    donors.sort(function(a, b) {
+      return new Date(b.timestamp) - new Date(a.timestamp);
+    });
+    
+    return ContentService
+      .createTextOutput(JSON.stringify(donors))
+      .setMimeType(ContentService.MimeType.JSON);
+      
+  } catch (error) {
+    Logger.log("Error in getDonorsData: " + error.toString());
     return ContentService
       .createTextOutput(JSON.stringify([]))
       .setMimeType(ContentService.MimeType.JSON);
