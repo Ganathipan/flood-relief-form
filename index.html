@@ -1266,7 +1266,19 @@
       // Filter by item needed
       if (selectedItem) {
         filtered = filtered.filter(need => {
-          return need.needsFormatted && need.needsFormatted.toLowerCase().includes(selectedItem.toLowerCase());
+          if (!need.needs && !need.needsFormatted) return false;
+          // Check both raw needs string and formatted string
+          const needsRaw = (need.needs || '').toLowerCase();
+          const needsFormatted = (need.needsFormatted || '').toLowerCase();
+          const searchItem = selectedItem.toLowerCase().replace(/\s+/g, '');
+          
+          // Check if item exists in raw format (e.g., "FoodPacks_10")
+          if (needsRaw.includes(searchItem)) return true;
+          
+          // Check if item exists in formatted string (e.g., "Food Packs (10)")
+          // Remove quantities and normalize for comparison
+          const normalizedFormatted = needsFormatted.replace(/\(\d+\)/g, '').replace(/\s+/g, '');
+          return normalizedFormatted.includes(searchItem);
         });
       }
       
@@ -1351,7 +1363,19 @@
       // Filter by item available
       if (selectedItem) {
         filtered = filtered.filter(donor => {
-          return donor.donationsFormatted && donor.donationsFormatted.toLowerCase().includes(selectedItem.toLowerCase());
+          if (!donor.donations && !donor.donationsFormatted) return false;
+          // Check both raw donations string and formatted string
+          const donationsRaw = (donor.donations || '').toLowerCase();
+          const donationsFormatted = (donor.donationsFormatted || '').toLowerCase();
+          const searchItem = selectedItem.toLowerCase().replace(/\s+/g, '');
+          
+          // Check if item exists in raw format (e.g., "FoodPacks_10")
+          if (donationsRaw.includes(searchItem)) return true;
+          
+          // Check if item exists in formatted string (e.g., "Food Packs (10)")
+          // Remove quantities and normalize for comparison
+          const normalizedFormatted = donationsFormatted.replace(/\(\d+\)/g, '').replace(/\s+/g, '');
+          return normalizedFormatted.includes(searchItem);
         });
       }
       
