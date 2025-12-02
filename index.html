@@ -378,10 +378,52 @@
   <button class="full-width-submit" onclick="submitForm()">Submit</button>
   </div>
 
-    <!-- TRANSPORT FORM -->\n    <div id=\"transport-form\" class=\"page-content\" style=\"display: none;\">\n    <h3 style=\"text-align: center; margin-top: 0;\">Transport Supporter Registration</h3>\n\n    <!-- Needs from Affected People for Transport -->\n    <div class=\"needs-section\">\n      <h4>\ud83c\udd98 Where People Need Help & Available Supplies</h4>\n      <div class=\"filter-section\">\n        <label style=\"display: inline; margin-right: 10px;\">Filter by District:</label>\n        <select id=\"transport-needs-filter\" onchange=\"filterTransportNeeds()\">\n          <option value=\"\">All Districts</option>\n          <option>Ampara</option>\n          <option>Anuradhapura</option>\n          <option>Badulla</option>\n          <option>Batticaloa</option>\n          <option>Colombo</option>\n          <option>Galle</option>\n          <option>Gampaha</option>\n          <option>Hambantota</option>\n          <option>Jaffna</option>\n          <option>Kalutara</option>\n          <option>Kandy</option>\n          <option>Kegalle</option>\n          <option>Kilinochchi</option>\n          <option>Kurunegala</option>\n          <option>Mannar</option>\n          <option>Matale</option>\n          <option>Matara</option>\n          <option>Monaragala</option>\n          <option>Mullaitivu</option>\n          <option>Nuwara Eliya</option>\n          <option>Polonnaruwa</option>\n          <option>Puttalam</option>\n          <option>Ratnapura</option>\n          <option>Trincomalee</option>\n          <option>Vavuniya</option>\n        </select>\n        <button type=\"button\" onclick=\"loadTransportNeeds()\">\ud83d\udd04 Refresh</button>\n      </div>\n      <div id=\"transport-needs-list\" class=\"needs-list\">\n        <div class=\"loading\">Loading needs and available supplies...</div>\n      </div>\n    </div>
+    <!-- TRANSPORT FORM -->
+    <div id="transport-form" class="page-content" style="display: none;">
+    <h3 style="text-align: center; margin-top: 0;">Transport Supporter Registration</h3>
+
+    <!-- Needs from Affected People for Transport -->
+    <div class="needs-section">
+      <h4>🆘 Where People Need Help & Available Supplies</h4>
+      <div class="filter-section">
+        <label style="display: inline; margin-right: 10px;">Filter by District:</label>
+        <select id="transport-needs-filter" onchange="filterTransportNeeds()">
+          <option value="">All Districts</option>
+          <option>Ampara</option>
+          <option>Anuradhapura</option>
+          <option>Badulla</option>
+          <option>Batticaloa</option>
+          <option>Colombo</option>
+          <option>Galle</option>
+          <option>Gampaha</option>
+          <option>Hambantota</option>
+          <option>Jaffna</option>
+          <option>Kalutara</option>
+          <option>Kandy</option>
+          <option>Kegalle</option>
+          <option>Kilinochchi</option>
+          <option>Kurunegala</option>
+          <option>Mannar</option>
+          <option>Matale</option>
+          <option>Matara</option>
+          <option>Monaragala</option>
+          <option>Mullaitivu</option>
+          <option>Nuwara Eliya</option>
+          <option>Polonnaruwa</option>
+          <option>Puttalam</option>
+          <option>Ratnapura</option>
+          <option>Trincomalee</option>
+          <option>Vavuniya</option>
+        </select>
+        <button type="button" onclick="loadTransportNeeds()">🔄 Refresh</button>
+      </div>
+      <div id="transport-needs-list" class="needs-list">
+        <div class="loading">Loading needs and available supplies...</div>
+      </div>
+    </div>
 
     <label>Name / Organization</label>
-    <input type=\"text\" id=\"transport-name\" required>
+    <input type="text" id="transport-name" required>
 
     <label>Phone Number</label>
     <input type="text" id="transport-phone" required>
