@@ -582,36 +582,58 @@
       <p style="text-align: center; color: #666;">Find people in need and contact them directly to coordinate help</p>
       
       <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-        <label>Filter by District</label>
-        <select id="donor-browse-district" onchange="filterNeedsForDonor()">
-          <option value="">All Districts</option>
-          <option>Ampara</option>
-          <option>Anuradhapura</option>
-          <option>Badulla</option>
-          <option>Batticaloa</option>
-          <option>Colombo</option>
-          <option>Galle</option>
-          <option>Gampaha</option>
-          <option>Hambantota</option>
-          <option>Jaffna</option>
-          <option>Kalutara</option>
-          <option>Kandy</option>
-          <option>Kegalle</option>
-          <option>Kilinochchi</option>
-          <option>Kurunegala</option>
-          <option>Mannar</option>
-          <option>Matale</option>
-          <option>Matara</option>
-          <option>Monaragala</option>
-          <option>Mullaitivu</option>
-          <option>Nuwara Eliya</option>
-          <option>Polonnaruwa</option>
-          <option>Puttalam</option>
-          <option>Ratnapura</option>
-          <option>Trincomalee</option>
-          <option>Vavuniya</option>
-        </select>
-        <button type="button" onclick="loadNeedsForDonor()">🔄 Refresh</button>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 10px;">
+          <div>
+            <label>Filter by District</label>
+            <select id="donor-browse-district" onchange="filterNeedsForDonor()">
+              <option value="">All Districts</option>
+              <option>Ampara</option>
+              <option>Anuradhapura</option>
+              <option>Badulla</option>
+              <option>Batticaloa</option>
+              <option>Colombo</option>
+              <option>Galle</option>
+              <option>Gampaha</option>
+              <option>Hambantota</option>
+              <option>Jaffna</option>
+              <option>Kalutara</option>
+              <option>Kandy</option>
+              <option>Kegalle</option>
+              <option>Kilinochchi</option>
+              <option>Kurunegala</option>
+              <option>Mannar</option>
+              <option>Matale</option>
+              <option>Matara</option>
+              <option>Monaragala</option>
+              <option>Mullaitivu</option>
+              <option>Nuwara Eliya</option>
+              <option>Polonnaruwa</option>
+              <option>Puttalam</option>
+              <option>Ratnapura</option>
+              <option>Trincomalee</option>
+              <option>Vavuniya</option>
+            </select>
+          </div>
+          <div>
+            <label>Filter by Item Needed</label>
+            <select id="donor-browse-item" onchange="filterNeedsForDonor()">
+              <option value="">All Items</option>
+              <option value="Food Packs">Food Packs</option>
+              <option value="Water Bottles">Water Bottles</option>
+              <option value="Clothes">Clothes</option>
+              <option value="Medicines">Medicines</option>
+              <option value="Sanitary Items">Sanitary Items</option>
+              <option value="Bedding">Bedding</option>
+              <option value="Shelter">Shelter</option>
+              <option value="Medical Help">Medical Help</option>
+            </select>
+          </div>
+          <div>
+            <label>Filter by GN Division</label>
+            <input type="text" id="donor-browse-gn" placeholder="Enter GN Division" onkeyup="filterNeedsForDonor()" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+          </div>
+        </div>
+        <button type="button" onclick="loadNeedsForDonor()" style="width: 100%;">🔄 Refresh</button>
       </div>
       <div id="donor-browse-list" class="needs-list">
         <div class="loading">Loading needs data...</div>
@@ -960,36 +982,58 @@
       <p style="text-align: center; color: #666;">Find donors and contact them directly to receive help</p>
       
       <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-        <label>Filter by District</label>
-        <select id="affected-browse-district" onchange="filterDonorsForAffected()">
-          <option value="">All Districts</option>
-          <option>Ampara</option>
-          <option>Anuradhapura</option>
-          <option>Badulla</option>
-          <option>Batticaloa</option>
-          <option>Colombo</option>
-          <option>Galle</option>
-          <option>Gampaha</option>
-          <option>Hambantota</option>
-          <option>Jaffna</option>
-          <option>Kalutara</option>
-          <option>Kandy</option>
-          <option>Kegalle</option>
-          <option>Kilinochchi</option>
-          <option>Kurunegala</option>
-          <option>Mannar</option>
-          <option>Matale</option>
-          <option>Matara</option>
-          <option>Monaragala</option>
-          <option>Mullaitivu</option>
-          <option>Nuwara Eliya</option>
-          <option>Polonnaruwa</option>
-          <option>Puttalam</option>
-          <option>Ratnapura</option>
-          <option>Trincomalee</option>
-          <option>Vavuniya</option>
-        </select>
-        <button type="button" onclick="loadDonorsForAffected()">🔄 Refresh</button>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 10px;">
+          <div>
+            <label>Filter by District</label>
+            <select id="affected-browse-district" onchange="filterDonorsForAffected()">
+              <option value="">All Districts</option>
+              <option>Ampara</option>
+              <option>Anuradhapura</option>
+              <option>Badulla</option>
+              <option>Batticaloa</option>
+              <option>Colombo</option>
+              <option>Galle</option>
+              <option>Gampaha</option>
+              <option>Hambantota</option>
+              <option>Jaffna</option>
+              <option>Kalutara</option>
+              <option>Kandy</option>
+              <option>Kegalle</option>
+              <option>Kilinochchi</option>
+              <option>Kurunegala</option>
+              <option>Mannar</option>
+              <option>Matale</option>
+              <option>Matara</option>
+              <option>Monaragala</option>
+              <option>Mullaitivu</option>
+              <option>Nuwara Eliya</option>
+              <option>Polonnaruwa</option>
+              <option>Puttalam</option>
+              <option>Ratnapura</option>
+              <option>Trincomalee</option>
+              <option>Vavuniya</option>
+            </select>
+          </div>
+          <div>
+            <label>Filter by Item Available</label>
+            <select id="affected-browse-item" onchange="filterDonorsForAffected()">
+              <option value="">All Items</option>
+              <option value="Food Packs">Food Packs</option>
+              <option value="Water Bottles">Water Bottles</option>
+              <option value="Clothes">Clothes</option>
+              <option value="Medicines">Medicines</option>
+              <option value="Sanitary Items">Sanitary Items</option>
+              <option value="Bedding">Bedding</option>
+              <option value="Shelter">Shelter</option>
+              <option value="Medical Help">Medical Help</option>
+            </select>
+          </div>
+          <div>
+            <label>Filter by GN Division</label>
+            <input type="text" id="affected-browse-gn" placeholder="Enter GN Division" onkeyup="filterDonorsForAffected()" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+          </div>
+        </div>
+        <button type="button" onclick="loadDonorsForAffected()" style="width: 100%;">🔄 Refresh</button>
       </div>
       <div id="affected-browse-list" class="needs-list">
         <div class="loading">Loading donations data...</div>
@@ -1209,13 +1253,31 @@
     // Filter needs for donor browse
     function filterNeedsForDonor() {
       const selectedDistrict = document.getElementById('donor-browse-district').value;
+      const selectedItem = document.getElementById('donor-browse-item').value;
+      const gnDivisionSearch = document.getElementById('donor-browse-gn').value.toLowerCase().trim();
       
-      if (!selectedDistrict) {
-        displayNeedsForDonor(allNeedsData);
-      } else {
-        const filtered = allNeedsData.filter(need => need.district === selectedDistrict);
-        displayNeedsForDonor(filtered);
+      let filtered = allNeedsData;
+      
+      // Filter by district
+      if (selectedDistrict) {
+        filtered = filtered.filter(need => need.district === selectedDistrict);
       }
+      
+      // Filter by item needed
+      if (selectedItem) {
+        filtered = filtered.filter(need => {
+          return need.needsFormatted && need.needsFormatted.toLowerCase().includes(selectedItem.toLowerCase());
+        });
+      }
+      
+      // Filter by GN Division
+      if (gnDivisionSearch) {
+        filtered = filtered.filter(need => {
+          return need.gnDivision && need.gnDivision.toLowerCase().includes(gnDivisionSearch);
+        });
+      }
+      
+      displayNeedsForDonor(filtered);
     }
 
     // Load donors for affected people browse section
@@ -1276,13 +1338,31 @@
     // Filter donors for affected people browse
     function filterDonorsForAffected() {
       const selectedDistrict = document.getElementById('affected-browse-district').value;
+      const selectedItem = document.getElementById('affected-browse-item').value;
+      const gnDivisionSearch = document.getElementById('affected-browse-gn').value.toLowerCase().trim();
       
-      if (!selectedDistrict) {
-        displayDonorsForAffected(allDonorsData);
-      } else {
-        const filtered = allDonorsData.filter(donor => donor.district === selectedDistrict);
-        displayDonorsForAffected(filtered);
+      let filtered = allDonorsData;
+      
+      // Filter by district
+      if (selectedDistrict) {
+        filtered = filtered.filter(donor => donor.district === selectedDistrict);
       }
+      
+      // Filter by item available
+      if (selectedItem) {
+        filtered = filtered.filter(donor => {
+          return donor.donationsFormatted && donor.donationsFormatted.toLowerCase().includes(selectedItem.toLowerCase());
+        });
+      }
+      
+      // Filter by GN Division
+      if (gnDivisionSearch) {
+        filtered = filtered.filter(donor => {
+          return donor.gnDivision && donor.gnDivision.toLowerCase().includes(gnDivisionSearch);
+        });
+      }
+      
+      displayDonorsForAffected(filtered);
     }
 
     // Load needs when page loads
